@@ -1,5 +1,5 @@
 <template>
-    <div class="layout">
+    <div class="layout" style="min-width:1200px;">
         <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
             <Menu theme="dark" width="auto"  @on-select="changeTab">
                 <div class="menuTop">
@@ -19,7 +19,8 @@
             </Menu>
         </Sider>
         <Layout :style="{marginLeft: '200px'}">
-            <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.3)'}">
+            <div>
+            <Header :style="{background: '#fff',position: 'fixed', width: '100%', boxShadow: '0 2px 3px 2px rgba(0,0,0,.3)'}">
                 <div class="topBox">
                     <img src="../assets/logo.png" /> 
                     <label>综合物料管理平台</label>
@@ -29,16 +30,20 @@
                     </div>
                 </div> 
             </Header>
-            <Content :style="{padding: '0 16px 16px'}">
+            </div>
+            <div>
+            <Content :style="{padding: '60px 16px 16px 16px'}">
                 <Breadcrumb :style="{margin: '16px 0'}">
                     <BreadcrumbItem v-for="(tab,index) in contentTabs.tabList" :key="index">{{tab.name}}</BreadcrumbItem>
                 </Breadcrumb>
-                <Card>
-                    <div style="height: 700px">
+                <Card :style="{position: 'static'}">
+                    <div style="height: 1200px; ">
                         <router-view />
                     </div>
                 </Card>
             </Content>
+            </div>
+            
         </Layout>
     </div>
 </template>
@@ -71,7 +76,7 @@
     }
     .topBox .userInfo{
         float: right;
-        margin: 0 0 0 0;
+        margin: 0 200px 0 0;
         font-size: 16px;
     }
     .menuTop{
