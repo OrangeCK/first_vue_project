@@ -1,25 +1,29 @@
 <template>
     <div>
         <div class="tools">
-            <Input v-model="value14" placeholder="请输入你的查询条件..." clearable :style="{position: 'static'}"  class="inp"/>
-            <Input v-model="value14" placeholder="请输入你的查询条件..." clearable :style="{position: 'static'}" class="inp"/>
-            <Select v-model="model1" :style="{position: 'static',width: '200px'}">
+            <Input v-model="value14" placeholder="请输入你的查询条件..." clearable class="inp"/>
+            <Input v-model="value14" placeholder="请输入你的查询条件..." clearable class="inp"/>
+            <Select v-model="model1" :style="{width: '200px'}">
                 <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <Button type="warning" icon="ios-search">Search</Button>
-            <!-- <input placeholder="请输入你的查询条件..." clearable size="large" class="inp">       -->
         </div>
-        <Divider orientation="left" :style="{position:'static'}"><h4>查询结果</h4></Divider>
+        <Divider orientation="left" ><h4>查询结果</h4></Divider>
         <div class="content">
-            <!-- <Table :row-class-name="rowClassName" :columns="columns1" :data="data1" :style="{position:'static'}"></Table> -->
-            <Table :columns="columns9" ref="selection" :data="data1" :style="{position:'static'}"></Table>
-            <Page :total="100" show-sizer />
-            <!-- <Page :total="100" show-elevator /> -->
+            <Table :columns="columns9" ref="selection" :data="data1" class="table"></Table>
+            <div style="margin: 10px 10px 0 10px;overflow: hidden">
+                <div style="float: right;">
+                    <Page :total="100" show-sizer show-elevator/>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <style>
+.table table{
+    min-width: 1600px;
+}
 div .tools {
     width: 100%;
     min-height: 76px;
@@ -28,15 +32,6 @@ div .tools {
 }
 div .inp{
     width: 200px;
-}
-.ivu-table:before {
-    height: 0px;
-}
-.ivu-input{
-    position: static;
-}
-.ivu-select-single .ivu-select-selection{
-    position: static;
 }
 .content {
     padding: 5px;
@@ -153,6 +148,14 @@ export default {
                     {
                         title: 'Address',
                         key: 'address'
+                    },
+                    {
+                        title: 'Address',
+                        key: 'address'
+                    },
+                    {
+                        title: 'Address',
+                        key: 'address'
                     }
                 ],
                 data1: [
@@ -161,6 +164,18 @@ export default {
                         age: 18,
                         address: 'New York No. 1 Lake Park',
                         date: '2016-10-03'
+                    },
+                    {
+                        name: 'Jim Green',
+                        age: 24,
+                        address: 'London No. 1 Lake Park',
+                        date: '2016-10-01'
+                    },
+                    {
+                        name: 'Jim Green',
+                        age: 24,
+                        address: 'London No. 1 Lake Park',
+                        date: '2016-10-01'
                     },
                     {
                         name: 'Jim Green',

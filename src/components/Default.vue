@@ -1,54 +1,47 @@
 <template>
-    <div class="layout" style="min-width:1200px;border-bottom-width: 0px;border-top-width: 0px;">
-        <div>
+    <div class="layout" style="border-bottom-width: 0px;border-top-width: 0px;">
+        <Layout>
             <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
-            <Menu theme="dark" width="auto"  @on-select="changeTab">
-                <div class="menuTop">
-                    <Icon type="ios-home" size="28" color="#fff"></Icon>
-                    <label>首页</label>
-                </div>
-                <Submenu :name="menu.id" v-for="menu in form.menus" :key="menu.id">
-                    <template slot="title">
-                        <Icon :type="menu.iconType" size="18"></Icon>
-                        {{menu.menuName}}
-                    </template>
-                    <MenuItem :name="children.mName" v-for="(children,index) in menu.menuList" :key="index">
-                        <Icon :type="children.iconType2" size="16"></Icon>
-                        {{children.mName}}
-                    </MenuItem>
-                </Submenu>
-            </Menu>
-        </Sider>
-        </div>
-        <div>
-            <Layout :style="{marginLeft: '200px'}">
-                <div>
-                    <Header :style="{background: '#fff',position: 'fixed', width: '100%', boxShadow: '0 2px 3px 2px rgba(0,0,0,.3)'}">
-                        <div class="topBox">
-                            <img src="../assets/logo.png" /> 
-                            <label>综合物料管理平台</label>
-                            <div class="userInfo">
-                                <img src="../assets/user.png" /> 
-                                <label style="font-weight: normal;">橙子味栗子</label>
-                            </div>
-                        </div> 
-                    </Header>
-                </div>
-                <div>
-                    <Content :style="{padding: '60px 16px 16px 16px', background: 'rgb(220, 242, 245)', border: '0px'}">
-                        <Breadcrumb :style="{margin: '16px 0'}">
-                            <BreadcrumbItem v-for="(tab,index) in contentTabs.tabList" :key="index">{{tab.name}}</BreadcrumbItem>
-                        </Breadcrumb>
-                        <Card :style="{position: 'static', overflow: 'hidden'}">
-                            <div class="card-div">
-                                <router-view />
-                            </div>
-                        </Card>
-                    </Content>
-                </div>
-                
-            </Layout>
-        </div>
+                <Menu theme="dark" width="auto"  @on-select="changeTab">
+                    <div class="menuTop">
+                        <Icon type="ios-home" size="28" color="#fff"></Icon>
+                        <label>首页</label>
+                    </div>
+                    <Submenu :name="menu.id" v-for="menu in form.menus" :key="menu.id">
+                        <template slot="title">
+                            <Icon :type="menu.iconType" size="18"></Icon>
+                            {{menu.menuName}}
+                        </template>
+                        <MenuItem :name="children.mName" v-for="(children,index) in menu.menuList" :key="index">
+                            <Icon :type="children.iconType2" size="16"></Icon>
+                            {{children.mName}}
+                        </MenuItem>
+                    </Submenu>
+                </Menu>
+            </Sider>
+        </Layout>
+        <Layout :style="{marginLeft: '200px'}">
+            <Header :style="{background: '#fff', width: '100%', boxShadow: '0 2px 3px 2px rgba(0,0,0,.3)'}" style="z-index: 1">
+                <div class="topBox">
+                    <img src="../assets/logo.png" /> 
+                    <label>综合物料管理平台</label>
+                    <div class="userInfo">
+                        <img src="../assets/user.png" /> 
+                        <label style="font-weight: normal;">橙子味栗子</label>
+                    </div>
+                </div> 
+            </Header>
+            <Content :style="{padding: '0px 16px 16px 16px',background: 'rgb(220, 242, 245)'}" >
+                <Breadcrumb :style="{margin: '16px 0'}">
+                    <BreadcrumbItem v-for="(tab,index) in contentTabs.tabList" :key="index">{{tab.name}}</BreadcrumbItem>
+                </Breadcrumb>
+                <Card>
+                    <div class="card-div">
+                        <router-view />
+                    </div>
+                </Card>
+            </Content>
+        </Layout>
     </div>
 </template>
 <style scoped>
@@ -80,7 +73,7 @@
     }
     .topBox .userInfo{
         float: right;
-        margin: 0 200px 0 0;
+        margin: 0 0 0 0;
         font-size: 16px;
     }
     .menuTop{
