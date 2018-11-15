@@ -1,9 +1,9 @@
 <template>
-    <div class="layout" style="border-bottom-width: 0px;border-top-width: 0px;">
-        <Layout>
-            <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
+    <div class="layout" style="min-width:1200px;border-bottom-width: 0px;border-top-width: 0px;">
+        <Layout :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
+            <Sider reverse-arrow="true">
                 <Menu theme="dark" width="auto"  @on-select="changeTab">
-                    <div class="menuTop">
+                    <div class="menuTop" @click="jumpIndex">
                         <Icon type="ios-home" size="28" color="#fff"></Icon>
                         <label>首页</label>
                     </div>
@@ -84,6 +84,7 @@
         color:#fff;
         margin: 5px 0 0 15px;
         position:absolute;
+        cursor: pointer;
     }
     /* .card-div{
         min-height: 500px;
@@ -93,23 +94,25 @@
     export default {
         data(){
             return{
+                siderShow:true,
                 contentTabs:{
                     tabList:[]
                 },
                 form:{
                     menus:[
-                        {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mName:'TestVue',iconType2:'ios-basket-outline'},{mName:'TestVue1',iconType2:'ios-basket-outline'}]}
-                        // {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mName:'菜单41号',iconType2:'md-cube'},{mName:'菜单3号',iconType2:'md-cube'}]},
-                        // {id:6,menuName:'应用管理',menuNum:'0138',iconType:'ios-keypad',menuList:[{mName:'菜单42号',iconType2:'ios-keypad-outline'},{mName:'菜单31号',iconType2:'ios-keypad-outline'}]},
-                        // {id:7,menuName:'盒子管理',menuNum:'0138',iconType:'ios-list-box-outline',menuList:[{mName:'菜单43号',iconType2:'ios-list-box-outline'},{mName:'菜单32号',iconType2:'ios-list-box-outline'}]},
-                        // {id:8,menuName:'浏览管理',menuNum:'0138',iconType:'ios-browsers',menuList:[{mName:'菜单44号',iconType2:'ios-browsers-outline'},{mName:'菜单33号',iconType2:'ios-browsers-outline'}]},
-                        // {id:10,menuName:'用户管理',menuNum:'0138',iconType:'md-person',menuList:[{mName:'菜单45号',iconType2:'ios-person-outline'},{mName:'菜单34号',iconType2:'ios-person-outline'}]},
-                        // {id:9,menuName:'设置管理',menuNum:'0139',iconType:'ios-settings',menuList:[{mName:'菜单56号',iconType2:'ios-settings-outline'},{mName:'菜单61号',iconType2:'ios-settings-outline'}]}
+                        {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mName:'TestVue',iconType2:'ios-basket-outline'},{mName:'TestVue1',iconType2:'ios-basket-outline'}]},
+                        {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mName:'菜单41号',iconType2:'md-cube'},{mName:'菜单3号',iconType2:'md-cube'}]},
+                        {id:6,menuName:'应用管理',menuNum:'0138',iconType:'ios-keypad',menuList:[{mName:'菜单42号',iconType2:'ios-keypad-outline'},{mName:'菜单31号',iconType2:'ios-keypad-outline'}]},
+                        {id:7,menuName:'盒子管理',menuNum:'0138',iconType:'ios-list-box-outline',menuList:[{mName:'菜单43号',iconType2:'ios-list-box-outline'},{mName:'菜单32号',iconType2:'ios-list-box-outline'}]},
+                        {id:8,menuName:'浏览管理',menuNum:'0138',iconType:'ios-browsers',menuList:[{mName:'菜单44号',iconType2:'ios-browsers-outline'},{mName:'菜单33号',iconType2:'ios-browsers-outline'}]},
+                        {id:10,menuName:'用户管理',menuNum:'0138',iconType:'md-person',menuList:[{mName:'菜单45号',iconType2:'ios-person-outline'},{mName:'菜单34号',iconType2:'ios-person-outline'}]},
+                        {id:9,menuName:'设置管理',menuNum:'0139',iconType:'ios-settings',menuList:[{mName:'菜单56号',iconType2:'ios-settings-outline'},{mName:'菜单61号',iconType2:'ios-settings-outline'}]}
                     ]
                 }
             }
         },
         created(){
+            this.jumpIndex();
             // var obj = document.getElementsByClassName("card-div");
             // obj.setAttribute('height','900px');
             // alert(document.body.clientWidth);
@@ -117,6 +120,10 @@
             // $(".ivu-layout-sider-children").css("height",document.body.clientWidth);
         },
         methods:{
+            jumpIndex(){
+                this.$router.push({ path: 'TestVue2' });  
+                this.siderShow = false;  
+            },
             changeTab(name){
                 var breakFlag = false;
                 this.contentTabs.tabList=[];
