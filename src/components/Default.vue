@@ -2,7 +2,7 @@
     <div class="layout" style="min-width:1200px;border-bottom-width: 0px;border-top-width: 0px;">
         <Layout :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
             <Sider reverse-arrow="true">
-                <Menu theme="dark" width="auto"  @on-select="changeTab">
+                <Menu theme="dark" width="auto"  @on-select="changeTab" accordion='true' :active-name='activeName'>
                     <div class="menuTop" @click="jumpIndex">
                         <Icon type="ios-home" size="28" color="#fff"></Icon>
                         <label>首页</label>
@@ -94,6 +94,7 @@
     export default {
         data(){
             return{
+                activeName:'菜单3号',
                 siderShow:true,
                 contentTabs:{
                     tabList:[]
@@ -116,13 +117,12 @@
             // var obj = document.getElementsByClassName("card-div");
             // obj.setAttribute('height','900px');
             // alert(document.body.clientWidth);
-            
             // $(".ivu-layout-sider-children").css("height",document.body.clientWidth);
         },
         methods:{
             jumpIndex(){
                 this.$router.push({ path: 'TestVue2' });  
-                this.siderShow = false;  
+                this.activeName = 'ssss';
             },
             changeTab(name){
                 var breakFlag = false;

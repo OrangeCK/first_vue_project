@@ -4,6 +4,7 @@ import router from './router';
 import 'iview/dist/styles/iview.css';
 import 'iview/dist/iview.min.js';
 import iView from 'iview';
+import $ from 'jquery';
 
 Vue.use(iView);
 

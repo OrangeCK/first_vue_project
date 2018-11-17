@@ -29,6 +29,8 @@ div .tools {
     min-height: 76px;
     background: rgb(220, 242, 245);
     padding: 20px 24px 0 24px;
+    position:relative;
+    z-index: 1000;
 }
 div .inp{
     width: 200px;
@@ -77,6 +79,7 @@ div .inp{
 }
 </style>
 <script>
+// import '../../static/jquery-3.2.1.min.js'
 export default {
         data () {
             return {
@@ -256,6 +259,25 @@ export default {
                     }
                 ]
             }
+        },
+        created(){
+            // alert(1);
+            var navH = $(".tools").offset().top;
+            $(window).scroll(function(){
+            //获取滚动条的滑动距离
+            var scroH = $(this).scrollTop();
+            alert(scroH);
+            //滚动条的滑动距离大于等于定位元素距离浏览器顶部的距离，就固定，反之就不固定
+            if(scroH>=navH){
+            $(".tools").css({"position":"fixed","top":0});
+            }else if(scroH<navH){
+            $(".tools").css({"position":"static"});
+            }
+            })
+            // var obj = document.getElementsByClassName("card-div");
+            // obj.setAttribute('height','900px');
+            // alert(document.body.clientWidth);
+            // $(".ivu-layout-sider-children").css("height",document.body.clientWidth);
         },
         methods: {
             rowClassName (row, index) {
