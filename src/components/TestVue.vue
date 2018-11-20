@@ -1,14 +1,16 @@
 <template>
     <div>
-        <div class="tools">
-            <Input v-model="value14" placeholder="请输入你的查询条件..." clearable class="inp"/>
-            <Input v-model="value14" placeholder="请输入你的查询条件..." clearable class="inp"/>
-            <Select v-model="model1" :style="{width: '200px'}">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-            <Button type="warning" icon="ios-search">Search</Button>
+        <div class="min_tools">
+            <div class="tools" ref="tools" :class="{'is_fixed' : isFixed}">
+                <Input  placeholder="请输入你的查询条件..." clearable class="inp"/>
+                <Input  placeholder="请输入你的查询条件..." clearable class="inp"/>
+                <Select :style="{width: '200px'}">
+                    <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+                <Button type="warning" icon="ios-search">Search</Button>
+            </div>
         </div>
-        <Divider orientation="left" ><h4>查询结果</h4></Divider>
+        <Divider orientation="left"><h4>查询结果</h4></Divider>
         <div class="content">
             <Table :columns="columns9" ref="selection" :data="data1" class="table"></Table>
             <div style="margin: 10px 10px 0 10px;overflow: hidden">
@@ -24,13 +26,23 @@
 .table table{
     min-width: 1600px;
 }
+.min_tools{
+    min-height: 76px;
+}
 div .tools {
     width: 100%;
     min-height: 76px;
     background: rgb(220, 242, 245);
     padding: 20px 24px 0 24px;
-    position:relative;
-    z-index: 1000;
+    position: relative;
+}
+div .is_fixed {
+    top: 0px;
+    left: 233px;
+    right: 33px;
+    width: auto;
+    position: fixed;
+    z-index: 999;   
 }
 div .inp{
     width: 200px;
@@ -38,7 +50,6 @@ div .inp{
 .content {
     padding: 5px;
     height: 100%;
-    /* background: rgb(241, 253, 255); */
     overflow:hidden;
 }
 .modalFooter{
@@ -79,10 +90,12 @@ div .inp{
 }
 </style>
 <script>
-// import '../../static/jquery-3.2.1.min.js'
 export default {
         data () {
             return {
+                isFixed: false,
+                offsetTop:0,
+                offsetWidth:0,
                 cityList: [
                     {
                         value: 'New York',
@@ -261,23 +274,16 @@ export default {
             }
         },
         created(){
-            // alert(1);
-            var navH = $(".tools").offset().top;
-            $(window).scroll(function(){
-            //获取滚动条的滑动距离
-            var scroH = $(this).scrollTop();
-            alert(scroH);
-            //滚动条的滑动距离大于等于定位元素距离浏览器顶部的距离，就固定，反之就不固定
-            if(scroH>=navH){
-            $(".tools").css({"position":"fixed","top":0});
-            }else if(scroH<navH){
-            $(".tools").css({"position":"static"});
-            }
-            })
-            // var obj = document.getElementsByClassName("card-div");
-            // obj.setAttribute('height','900px');
-            // alert(document.body.clientWidth);
-            // $(".ivu-layout-sider-children").css("height",document.body.clientWidth);
+
+        },
+        mounted(){
+            window.addEventListener('scroll', this.handleScroll);
+            this.$nextTick(function(){
+                this.offsetTop = $(".tools").offset().top;
+            });
+        },
+        destroyed(){
+            window.removeEventListener('scroll', this.handleScroll);
         },
         methods: {
             rowClassName (row, index) {
@@ -288,6 +294,10 @@ export default {
                 }
                 return '';
             },
+            handleScroll(){
+                var scrollTop =  window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+                this.isFixed = scrollTop > this.offsetTop ? true : false;
+            },     
             handleSelectAll (status) {
                 this.$refs.selection.selectAll(status);
             }

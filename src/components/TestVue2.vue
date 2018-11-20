@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="tools">
-            <Input v-model="value14" placeholder="请输入你的查询条件..." clearable class="inp"/>
-            <Input v-model="value14" placeholder="请输入你的查询条件..." clearable class="inp"/>
-            <Select v-model="model1" :style="{width: '200px'}">
+            <Input placeholder="请输入你的查询条件..." clearable class="inp"/>
+            <Input placeholder="请输入你的查询条件..." clearable class="inp"/>
+            <Select :style="{width: '200px'}">
                 <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <Button type="warning" icon="ios-search">Search</Button>

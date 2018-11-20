@@ -1,8 +1,8 @@
 <template>
     <div class="layout" style="min-width:1200px;border-bottom-width: 0px;border-top-width: 0px;">
         <Layout :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
-            <Sider reverse-arrow="true">
-                <Menu theme="dark" width="auto"  @on-select="changeTab" accordion='true' :active-name='activeName'>
+            <Sider accordion='true'>
+                <Menu theme="dark" width="auto"  @on-select="changeTab" :active-name='activeName'>
                     <div class="menuTop" @click="jumpIndex">
                         <Icon type="ios-home" size="28" color="#fff"></Icon>
                         <label>首页</label>
@@ -21,7 +21,7 @@
             </Sider>
         </Layout>
         <Layout :style="{marginLeft: '200px'}">
-            <Header :style="{background: '#fff', width: '100%', boxShadow: '0 2px 3px 2px rgba(0,0,0,.3)'}" style="z-index: 1">
+            <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.3)'}" style="z-index: 1">
                 <div class="topBox">
                     <img src="../assets/logo.png" /> 
                     <label>综合物料管理平台</label>
@@ -32,7 +32,7 @@
                 </div> 
             </Header>
             <Content :style="{padding: '0px 16px 16px 16px',background: 'rgb(220, 242, 245)'}" >
-                <Breadcrumb :style="{margin: '16px 0'}">
+                <Breadcrumb :style="{padding: '10px 0'}">
                     <BreadcrumbItem v-for="(tab,index) in contentTabs.tabList" :key="index">{{tab.name}}</BreadcrumbItem>
                 </Breadcrumb>
                 <Card>
@@ -46,7 +46,7 @@
 </template>
 <style scoped>
     .layout{
-        border: 1px solid #d7dde4;
+        border: 0px solid #d7dde4;
         background: #f5f7f9;
         position: relative;
         border-radius: 4px;
@@ -59,7 +59,6 @@
     .topBox {
         width: 100%;
         height: 62px;
-        float: left;
     }
     .topBox img{
         float: left;
@@ -113,11 +112,7 @@
             }
         },
         created(){
-            this.jumpIndex();
-            // var obj = document.getElementsByClassName("card-div");
-            // obj.setAttribute('height','900px');
-            // alert(document.body.clientWidth);
-            // $(".ivu-layout-sider-children").css("height",document.body.clientWidth);
+
         },
         methods:{
             jumpIndex(){
