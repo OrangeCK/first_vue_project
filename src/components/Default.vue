@@ -1,8 +1,8 @@
 <template>
     <div class="layout" style="min-width:1200px;border-bottom-width: 0px;border-top-width: 0px;">
         <Layout :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
-            <Sider accordion='true'>
-                <Menu theme="dark" width="auto"  @on-select="changeTab" :active-name='activeName'>
+            <Sider>
+                <Menu theme="dark" width="auto"  @on-select="changeTab" :active-name='activeName' accordion='true'>
                     <div class="menuTop" @click="jumpIndex">
                         <Icon type="ios-home" size="28" color="#fff"></Icon>
                         <label>首页</label>

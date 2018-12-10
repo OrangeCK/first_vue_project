@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import TestVue from '@/components/TestVue'
 import TestVue2 from '@/components/TestVue2'
 import Default from '@/components/Default'
+import Login from '@/components/Login'
 
 Vue.use(Router)
 
@@ -13,6 +14,11 @@ export default new Router({
       path: '/HelloWorld',
       name: 'HelloWorld',
       component: HelloWorld
+    },
+    {
+      path: '/Login',
+      name: 'Login',
+      component: Login
     },
     {
       path:'/',

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="ssssdds">
         <div class="min_tools">
             <div class="tools" ref="tools" :class="{'is_fixed' : isFixed}">
                 <Input  placeholder="请输入你的查询条件..." clearable class="inp"/>
@@ -29,10 +29,14 @@
 .min_tools{
     min-height: 76px;
 }
+.ssssdds{
+    height: auto;
+}
 div .tools {
     width: 100%;
     min-height: 76px;
     background: rgb(220, 242, 245);
+    /* background-color: #c5e0f5; */
     padding: 20px 24px 0 24px;
     position: relative;
 }
