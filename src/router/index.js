@@ -5,6 +5,7 @@ import TestVue from '@/components/TestVue'
 import TestVue2 from '@/components/TestVue2'
 import Default from '@/components/Default'
 import Login from '@/components/Login'
+import Employee from '@/components/Employee'
 
 Vue.use(Router)
 
@@ -31,9 +32,9 @@ export default new Router({
           component: TestVue
         },
         {
-          path: 'TestVue2',
-          name: 'TestVue2',
-          component: TestVue2
+          path: 'Employee',
+          name: 'Employee',
+          component: Employee
         }
       ]
     }

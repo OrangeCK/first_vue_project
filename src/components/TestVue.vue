@@ -27,17 +27,17 @@
     min-width: 1600px;
 }
 .min_tools{
-    min-height: 76px;
+    min-height: 50px;
 }
 .ssssdds{
     height: auto;
 }
 div .tools {
     width: 100%;
-    min-height: 76px;
+    min-height: 50px;
     background: rgb(220, 242, 245);
     /* background-color: #c5e0f5; */
-    padding: 20px 24px 0 24px;
+    padding: 10px 24px 0 24px;
     position: relative;
 }
 div .is_fixed {

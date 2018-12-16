@@ -1,18 +1,12 @@
 <template>
   <div class="loginbg">
     <div class="page">
-      <div class="head">订单统计系统</div>
+      <div class="head">LM平台</div>
       <div class="singin">SING IN</div>
       <div class="body">
         <ul class="loginForm">
           <li><label class="accountIcon"></label><input type="text" v-model="loginForm.account" class="txtAccount" placeholder="请输入登录账号" /></li>
           <li><label class="passwordIcon"></label><input type="password" v-model="loginForm.password" class="txtPwd" placeholder="请输入登录密码" /></li>
-          <li style="border:0px;"><input type="text" v-model="loginForm.code" class="txtCode" placeholder="请输入图片验证码" />
-            <dl>
-              <dt><img class="imgCode"></dt>
-              <dd><i>看不清？刷新一下</i></dd>
-            </dl>
-          </li>
           <li style="border:0px;">
             <img class="loginBtn" src="../assets/loginBtn.png" @click="loginAction" style="margin-left:-10px;"/>
           </li>
@@ -26,15 +20,16 @@
 .loginbg{
   width: 100%;
   height: 100%;
-  background: url(../assets/login_bg.png) center center no-repeat;
+  /* background: url(../assets/login_bg.png) center center no-repeat; */
+  background: #6699FF center center no-repeat;
   background-size: 100%;
 }
 .page{
   background-color: #fff;
   width: 503px;
-  height: 511px;
+  height: 430px;
   border-radius: 5px;
-  right: 10%;
+  right: 30%;
   bottom: 20%;
   position:absolute;
 }
@@ -133,6 +128,7 @@
 
 <script>
 import jsencrypt from '../../static/js/jsencrypt.min.js'
+import {setCookie,getCookie} from '../js/cookieUtil.js'
 
   export default {
     data() {
@@ -141,8 +137,7 @@ import jsencrypt from '../../static/js/jsencrypt.min.js'
         // chkCodePath:"/login/getValidateCode?r="+Math.random(),
         loginForm: {
           loginName: '',
-          password: '',
-          code: ''
+          password: ''
         }
       }
     },
@@ -156,13 +151,12 @@ import jsencrypt from '../../static/js/jsencrypt.min.js'
             password:this.loginForm.password,
           }).then(response => {
             if(response.data.status == 'succ'){
-              this.$router.push({ path: "/" });
+              setCookie('token', response.data.msg);
+              // this.$router.push({ path: "/" });
             }else{
-              this.$alert(response.data.msg, '信息', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  
-                }
+              this.$Message.error({
+                content:response.data.msg,
+                duration:5
               });
             }
             console.log(response);

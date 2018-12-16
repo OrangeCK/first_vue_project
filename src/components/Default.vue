@@ -2,7 +2,7 @@
     <div class="layout" style="min-width:1200px;border-bottom-width: 0px;border-top-width: 0px;">
         <Layout :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
             <Sider>
-                <Menu theme="dark" width="auto"  @on-select="changeTab" :active-name='activeName' accordion='true'>
+                <Menu theme="dark" width="auto"  @on-select="changeTab" :active-name='activeName' :accordion=true>
                     <div class="menuTop" @click="jumpIndex">
                         <Icon type="ios-home" size="28" color="#fff"></Icon>
                         <label>首页</label>
@@ -100,7 +100,7 @@
                 },
                 form:{
                     menus:[
-                        {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mName:'TestVue',iconType2:'ios-basket-outline'},{mName:'TestVue1',iconType2:'ios-basket-outline'}]},
+                        {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mName:'TestVue',iconType2:'ios-basket-outline'},{mName:'Employee',iconType2:'ios-basket-outline'}]},
                         {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mName:'菜单41号',iconType2:'md-cube'},{mName:'菜单3号',iconType2:'md-cube'}]},
                         {id:6,menuName:'应用管理',menuNum:'0138',iconType:'ios-keypad',menuList:[{mName:'菜单42号',iconType2:'ios-keypad-outline'},{mName:'菜单31号',iconType2:'ios-keypad-outline'}]},
                         {id:7,menuName:'盒子管理',menuNum:'0138',iconType:'ios-list-box-outline',menuList:[{mName:'菜单43号',iconType2:'ios-list-box-outline'},{mName:'菜单32号',iconType2:'ios-list-box-outline'}]},
