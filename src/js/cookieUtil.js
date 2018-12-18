@@ -24,6 +24,15 @@ if (document.cookie.length > 0) {
     return c_param;
 }
 };
+//删除cookie
+export function delCookie(key) {
+    var exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    var cval = getCookie(key);
+    if (cval != null)
+     document.cookie = key + "=" + cval + ";expires=" + exp.toGMTString();
+   };
+
 function padLeftZero (str) {
 return ('00' + str).substr(str.length);
 };

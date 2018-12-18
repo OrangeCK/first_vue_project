@@ -2,8 +2,8 @@
     <div class="ssssdds">
         <div class="min_tools">
             <div class="tools" ref="tools" :class="{'is_fixed' : isFixed}">
-                <Input  placeholder="请输入你的查询条件..." clearable class="inp"/>
-                <Input  placeholder="请输入你的查询条件..." clearable class="inp"/>
+                <Input  placeholder="请输入登录名..." v-model="searchForm.loginName" clearable class="inp"/>
+                <Input  placeholder="请输入用户名..." v-model="searchForm.userName" clearable class="inp"/>
                 <Select :style="{width: '200px'}">
                     <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
@@ -12,10 +12,11 @@
         </div>
         <Divider orientation="left"><h4>查询结果</h4></Divider>
         <div class="content">
-            <Table ref="selection" class="table"></Table>
+            <Table :loading="empTable.loading" ref="selection" :columns="empTable.columns" :data="empTable.datas" class="table"></Table>
             <div style="margin: 10px 10px 0 10px;overflow: hidden">
                 <div style="float: right;">
-                    <Page :total="100" show-sizer show-elevator/>
+                    <Page :total="empTable.page.total" :page-size="empTable.page.pageSize" :current="empTable.page.pageIndex" @on-change="searchEmployee"
+                        @on-page-size-change="handlePageSize" show-sizer show-total show-elevator/>
                 </div>
             </div>
         </div>
@@ -36,7 +37,6 @@ div .tools {
     width: 100%;
     min-height: 50px;
     background: rgb(220, 242, 245);
-    /* background-color: #c5e0f5; */
     padding: 10px 24px 0 24px;
     position: relative;
 }
@@ -94,43 +94,53 @@ div .inp{
 }
 </style>
 <script>
+import {setCookie,getCookie} from '../js/cookieUtil.js'
 export default {
         data () {
             return {
                 isFixed: false,
                 offsetTop:0,
                 offsetWidth:0,
-                empTable:{
+                searchForm:{
                     loginName:'',
-                    userName:'',
-                    age:'',
-                    sex:'',
-                    userPhone:''
+                    userName:''
+                },
+                empTable:{
+                    loading:false,
+                    columns:[
+                        {
+                            "title":"用户名称",
+                            "key":"userName"
+                        },
+                        {
+                            "title":"登录名称",
+                            "key":"loginName"
+                        },
+                        {
+                            "title":"年龄",
+                            "key":"age"
+                        },
+                        {
+                            "title":"性别",
+                            "key":"sex"
+                        },
+                        {
+                            "title":"用户电话",
+                            "key":"userPhone"
+                        }
+                    ],
+                    datas:[
+                    ],
+                    page:{
+                        pageIndex:1,
+                        pageSize:3,
+                        total:0
+                    } 
                 },
                 cityList: [
                     {
                         value: 'New York',
                         label: 'New York'
-                    },
-                    {
-                        value: 'London',
-                        label: 'London'
-                    },
-                    {
-                        value: 'Sydney',
-                        label: 'Sydney'
-                    },
-                    {
-                        value: 'Ottawa',
-                        label: 'Ottawa'
-                    },
-                    {
-                        value: 'Paris',
-                        label: 'Paris'
-                    },
-                    {
-                        value: 'Canberra',
-                        label: 'Canberra'
                     }
                 ]                
             }
@@ -163,12 +173,30 @@ export default {
             handleSelectAll (status) {
                 this.$refs.selection.selectAll(status);
             },
+            handlePageSize(pageSize){
+                this.empTable.page.pageSize = pageSize;
+                this.searchEmployee(1);
+            },
             searchEmployee(page){
+                this.empTable.loading = true;
+                // let token = getCookie("token");
+                // let config = {
+                //     headers:{
+                //         'Content-Type': 'application/json',
+                //         'Authorization': token
+                //     }
+                // }
                 this.$axios.post('/employee/employeePageList',{
-                    // loginName:'',
-                    // password:'',
+                    'loginName':this.searchForm.loginName,
+                    'userName':this.searchForm.userName,
+                    'page':page,
+                    'rows':this.empTable.page.pageSize
                 }).then(response => {
+                    var data = response.data;
                     console.log(response);
+                    this.empTable.datas = data.rows;
+                    this.empTable.page.total = data.total;
+                    this.empTable.loading = false;
                 });  
             }
         }

@@ -152,7 +152,7 @@ import {setCookie,getCookie} from '../js/cookieUtil.js'
           }).then(response => {
             if(response.data.status == 'succ'){
               setCookie('token', response.data.msg);
-              // this.$router.push({ path: "/" });
+              this.$router.push({ path: "/" });
             }else{
               this.$Message.error({
                 content:response.data.msg,
