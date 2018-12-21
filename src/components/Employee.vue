@@ -179,13 +179,6 @@ export default {
             },
             searchEmployee(page){
                 this.empTable.loading = true;
-                // let token = getCookie("token");
-                // let config = {
-                //     headers:{
-                //         'Content-Type': 'application/json',
-                //         'Authorization': token
-                //     }
-                // }
                 this.$axios.post('/employee/employeePageList',{
                     'loginName':this.searchForm.loginName,
                     'userName':this.searchForm.userName,

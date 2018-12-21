@@ -24,7 +24,7 @@ axios.interceptors.request.use(
   config => {
       let token = getCookie("token");
       if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-          console.log("token是多少：",token);
+          // console.log("token是多少：",token);
           config.headers.Authorization = token;
       }
       return config;
@@ -33,12 +33,11 @@ axios.interceptors.request.use(
       return Promise.reject(error);
   });
 
-// http响应拦截器
+// http response拦截器
 axios.interceptors.response.use(data => {// 响应成功关闭loading
   return data
  }, 
  error => {
-    console.log(error.response);
     if(error.response){
       switch(error.response.status){
         case 401:
