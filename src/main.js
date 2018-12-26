@@ -22,10 +22,13 @@ Vue.config.productionTip = false
 // http request 拦截器
 axios.interceptors.request.use(
   config => {
+      console.log("正在请求", config);
       let token = getCookie("token");
+      let refreshToken = getCookie("refreshToken");
       if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
           // console.log("token是多少：",token);
           config.headers.Authorization = token;
+          config.headers.Refresh_Token = refreshToken;
       }
       return config;
   },
@@ -35,9 +38,14 @@ axios.interceptors.request.use(
 
 // http response拦截器
 axios.interceptors.response.use(data => {// 响应成功关闭loading
+  let token = data.headers.authorization;
+  if(token){
+    setCookie('token', token);
+  }
   return data
  }, 
  error => {
+    console.log(error);
     if(error.response){
       switch(error.response.status){
         case 401:

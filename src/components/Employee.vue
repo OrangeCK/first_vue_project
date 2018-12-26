@@ -1,5 +1,5 @@
 <template>
-    <div class="ssssdds">
+    <div class="testcss">
         <div class="min_tools">
             <div class="tools" ref="tools" :class="{'is_fixed' : isFixed}">
                 <Input  placeholder="请输入登录名..." v-model="searchForm.loginName" clearable class="inp"/>
@@ -8,6 +8,7 @@
                     <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
                 <Button type="warning" icon="ios-search" @click="searchEmployee(1)">Search</Button>
+                <Button type="warning" icon="ios-search" @click="addEmployee">新增</Button>
             </div>
         </div>
         <Divider orientation="left"><h4>查询结果</h4></Divider>
@@ -19,18 +20,45 @@
                         @on-page-size-change="handlePageSize" show-sizer show-total show-elevator/>
                 </div>
             </div>
+            <Modal v-model="addModal.show" :title="addModal.title" @on-cancel="addModal.show=false">
+                <p slot="header" style="color:#f60;text-align:center">
+                    <Icon type="ios-information-circle"></Icon>
+                    <span>Delete confirmation</span>
+                </p>
+                <Form :model="addModal.form" ref="addModal.form" :label-width="80">
+                    <FormItem label="用户名称">
+                        <Input v-model="addModal.form.userName" placeholder="请输入用户名"/>
+                    </FormItem>
+                    <FormItem label="登录名称">
+                        <Input v-model="addModal.form.loginName" placeholder="请输入登录名"/>
+                    </FormItem>
+                    <FormItem label="用户电话">
+                        <Input v-model="addModal.form.phone" placeholder="请输入电话"/>
+                    </FormItem>
+                    <FormItem label="年龄">
+                        <Input v-model="addModal.form.age" placeholder="请输入年龄"/>
+                    </FormItem>
+                    <FormItem label="性别">
+                        <Input v-model="addModal.form.sex" placeholder="请输入性别"/>
+                    </FormItem>
+                </Form>
+                <div slot="footer">
+                    <Button type="error" size="large" long :loading="modal_loading" @click="del">Delete</Button>
+                </div>
+                
+            </Modal>
         </div>
     </div>
 </template>
 
 <style>
-.table table{
+/* .table table{
     min-width: 1600px;
-}
+} */
 .min_tools{
     min-height: 50px;
 }
-.ssssdds{
+.testcss{
     height: auto;
 }
 div .tools {
@@ -105,6 +133,17 @@ export default {
                     loginName:'',
                     userName:''
                 },
+                addModal:{
+                    show:false,
+                    title:'新增用户',
+                    form:{
+                        userName:'',
+                        loginName:'',
+                        age:'',
+                        sex:'',
+                        phone:''
+                    }
+                },
                 empTable:{
                     loading:false,
                     columns:[
@@ -127,13 +166,53 @@ export default {
                         {
                             "title":"用户电话",
                             "key":"userPhone"
+                        },
+                        {
+                            "title":"操作",
+                            "key":"",
+                            render:(h, params) => {
+                                return h('div',[
+                                    h('Button', {
+                                        props: {
+                                            type: 'warning',
+                                            size: 'default',
+                                            ghost: true,
+                                            icon: 'ios-create-outline'
+                                        },
+                                        style: {
+                                            padding: '5px 10px 5px 10px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.editUserModel(params.index);
+                                            }
+                                        }
+                                    }, '编辑'),
+                                    h('Button', {
+                                        props: {
+                                            type: 'error',
+                                            size: 'default',
+                                            ghost: true,
+                                            icon: 'ios-trash-outline'
+                                        },
+                                        style: {
+                                            padding: '5px 10px 5px 10px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.editUserModel(params.index);
+                                            }
+                                        }
+                                    }, '删除')   
+                                ])
+                            }
                         }
                     ],
                     datas:[
                     ],
                     page:{
                         pageIndex:1,
-                        pageSize:3,
+                        pageSize:10,
                         total:0
                     } 
                 },
@@ -191,6 +270,11 @@ export default {
                     this.empTable.page.total = data.total;
                     this.empTable.loading = false;
                 });  
+            },
+            addEmployee(){
+                this.addModal.show = true;
+            },
+            cancelEmployee(){
             }
         }
     }

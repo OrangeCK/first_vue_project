@@ -151,7 +151,8 @@ import {setCookie,getCookie} from '../js/cookieUtil.js'
             password:this.loginForm.password,
           }).then(response => {
             if(response.data.status == 'succ'){
-              setCookie('token', response.data.msg);
+              setCookie('token', response.data.data.Authorization);
+              setCookie('refreshToken', response.data.data.Refresh_Token);
               this.$router.push({ path: "/" });
             }else{
               this.$Message.error({
