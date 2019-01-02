@@ -12,7 +12,8 @@ export default {
 
 <style>
 html,body{
-  height: 100%;
+  /* height: 100%; */
+  height: auto;
   overflow-x:hidden;
   background-color: rgb(220, 242, 245);
   font-family: 'microsoft yahei','Avenir', Helvetica, Arial, sans-serif;

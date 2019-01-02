@@ -38,6 +38,7 @@ axios.interceptors.request.use(
 
 // http response拦截器
 axios.interceptors.response.use(data => {// 响应成功关闭loading
+  console.log("成功响应",data);
   let token = data.headers.authorization;
   if(token){
     setCookie('token', token);
@@ -45,7 +46,7 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
   return data
  }, 
  error => {
-    console.log(error);
+    console.log("失败响应",error.response);
     if(error.response){
       switch(error.response.status){
         case 401:
@@ -53,7 +54,15 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
             path:'/Login',
             query: {redirect: router.currentRoute.fullPath}
           });
-          // location.reload;
+          break;
+        case 403:
+          router.replace({
+            path:'/Login',
+            query: {redirect: router.currentRoute.fullPath}
+          });
+          break;
+        case 500:
+          return error.response;
       }
     }
   return Promise.reject(error)

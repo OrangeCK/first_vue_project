@@ -19,9 +19,9 @@
 <style scoped>
 .loginbg{
   width: 100%;
-  height: 100%;
-  /* background: url(../assets/login_bg.png) center center no-repeat; */
-  background: #6699FF center center no-repeat;
+  height: 100vh;
+  background: url(../assets/login_bg.png) center center no-repeat;
+  /* background: #6699FF center center no-repeat; */
   background-size: 100%;
 }
 .page{
@@ -29,8 +29,8 @@
   width: 503px;
   height: 430px;
   border-radius: 5px;
-  right: 30%;
-  bottom: 20%;
+  right: 10%;
+  top: 20%;
   position:absolute;
 }
 .loginForm{

@@ -1,5 +1,5 @@
 <template>
-    <div class="ssssdds">
+    <div>
         <div class="min_tools">
             <div class="tools" ref="tools" :class="{'is_fixed' : isFixed}">
                 <Input  placeholder="请输入你的查询条件..." clearable class="inp"/>
@@ -22,15 +22,12 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .table table{
     min-width: 1600px;
 }
 .min_tools{
     min-height: 50px;
-}
-.ssssdds{
-    height: auto;
 }
 div .tools {
     width: 100%;
