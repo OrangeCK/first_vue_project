@@ -16,8 +16,10 @@
                 <FormItem label="Text">
                     <Upload
                         multiple
+                        :on-success="uploadSuccess"
                         type="drag"
-                        action="//jsonplaceholder.typicode.com/posts/">
+                        name="multipartFile"
+                        action="/upload/uploadImg">
                         <div style="padding: 20px 0">
                             <Icon type="ios-cloud-upload" size="52" style="color: #ffad33"></Icon>
                             <p>Click or drag files here to upload</p>
@@ -63,10 +65,12 @@ export default {
             }
         },
         created(){
-
+            
         },
         methods: {
-            
+            uploadSuccess(response, file){
+                console.log(response);
+            }
         }
     }
 </script>
