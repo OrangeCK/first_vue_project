@@ -318,14 +318,6 @@ export default {
             window.removeEventListener('scroll', this.handleScroll);
         },
         methods: {
-            rowClassName (row, index) {
-                if (index === 1) {
-                    return 'demo-table-info-row';
-                } else if (index === 3) {
-                    return 'demo-table-error-row';
-                }
-                return '';
-            },
             handleScroll(){
                 var scrollTop =  window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
                 this.isFixed = scrollTop > this.offsetTop ? true : false;

@@ -101,7 +101,7 @@
                 form:{
                     menus:[
                         {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mName:'TestVue',iconType2:'ios-basket-outline'},{mName:'Employee',iconType2:'ios-basket-outline'}]},
-                        {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mName:'UploadFile',iconType2:'md-cube'}]}
+                        {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mName:'UploadFile',iconType2:'md-cube'},{mName:'QueryImage',iconType2:'md-cube'},{mName:'MarkdownEdit',iconType2:'md-cube'}]}
                         // {id:6,menuName:'应用管理',menuNum:'0138',iconType:'ios-keypad',menuList:[{mName:'菜单42号',iconType2:'ios-keypad-outline'},{mName:'菜单31号',iconType2:'ios-keypad-outline'}]},
                         // {id:7,menuName:'盒子管理',menuNum:'0138',iconType:'ios-list-box-outline',menuList:[{mName:'菜单43号',iconType2:'ios-list-box-outline'},{mName:'菜单32号',iconType2:'ios-list-box-outline'}]},
                         // {id:8,menuName:'浏览管理',menuNum:'0138',iconType:'ios-browsers',menuList:[{mName:'菜单44号',iconType2:'ios-browsers-outline'},{mName:'菜单33号',iconType2:'ios-browsers-outline'}]},

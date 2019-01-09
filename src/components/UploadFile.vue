@@ -3,20 +3,20 @@
         <Divider orientation="left"><h4>填写信息</h4></Divider>
         <div class="content">
             <Form :model="formItem" :label-width="80">
-                <FormItem label="标题" >
+                <FormItem label="标题：" >
                     <Input v-model="formItem.title" placeholder="请输入标题..." class="inp"></Input>
                 </FormItem>
-                <FormItem label="分类" >
+                <FormItem label="分类：" >
                     <Select v-model="formItem.category" class="inp">
                         <Option value="beijing">Beijing</Option>
                         <Option value="shanghai">Shanghai</Option>
                         <Option value="shenzhen">Chendu</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="概要" >
+                <FormItem label="概要：" >
                     <Input v-model="formItem.outline" placeholder="请输入内容概要..."></Input>
                 </FormItem>
-                <FormItem label="图片">
+                <FormItem label="图片：">
                     <Upload
                         multiple
                         :on-success="uploadSuccess"
@@ -28,14 +28,15 @@
                             <Icon type="ios-cloud-upload" size="52" style="color: #ffad33"></Icon>
                             <p>Click or drag files here to upload</p>
                         </div>
-                    </Upload>                
+                    </Upload>
                 </FormItem>
-                <FormItem label="文件描述">
+                <FormItem label="正文：">
                     <Input v-model="formItem.content" type="textarea" :autosize="{minRows: 5,maxRows: 10}" placeholder="Enter something..."></Input>
                 </FormItem>
                 <FormItem>
-                    <Button type="warning" @click="submitImage">Submit</Button>
-                    <Button style="margin-left: 8px">Cancel</Button>
+                    <Button v-if="formItem.id == null || formItem.id == ''" type="warning" @click="submitImage" :style="{width:'100px'}">新增</Button>
+                    <Button v-if="formItem.id != null && formItem.id != ''" type="warning" @click="updateImage" :style="{width:'100px'}">保存</Button>
+                    <Button style="margin-left: 8px" @click="resetImage" :style="{width:'100px'}">Reset</Button>
                 </FormItem>
             </Form>
         </div>
@@ -57,10 +58,11 @@ export default {
         data () {
             return {
                 formItem: {
+                    id: null,
                     title: '',
                     outline: '',
                     content: '',
-                    uploadId: '',
+                    uploadId: null,
                     category: ''                    
                 }              
             }
@@ -107,12 +109,13 @@ export default {
             removeUpload(response, file){
                 let data = response.response.data;
                 this.$axios.post('/upload/deleteUploadImg?id=' + data.id).then(rs => {
-                    console.log(rs);
+                    this.formItem.uploadId = null;
+                    this.tipMessage("info", "删除成功");
                 });  
             },
             submitImage(){
-                if(isEmptyOrUndefined(this.formItem.uploadId)){
-                    this.tipMessage("warning", "请先上传附件");
+                // 提交之前的校验
+                if(!this.checkForm()){
                     return;
                 }
                 this.$axios.post('/image/addImage',{
@@ -125,8 +128,59 @@ export default {
                     }
                 }).then(rs => {
                     console.log(rs);
+                    let data = rs.data
+                    this.formItem.id = data.data.id 
                 });
             },
+            updateImage(){
+                // 更新之前的校验
+                if(!this.checkForm()){
+                    return;
+                }
+                this.$axios.post('/image/updateImage',{
+                    'id': this.formItem.id,
+                    'title':this.formItem.title,
+                    'outline':this.formItem.outline,
+                    'content':this.formItem.content,
+                    'category':this.formItem.category,
+                    'uploadFile':{
+                        'id':this.formItem.uploadId
+                    }
+                }).then(rs => {
+                    console.log(rs);
+                    let data = rs.data
+                    this.formItem.id = data.data.id 
+                });
+            },
+            resetImage(){
+                this.formItem.title = '';
+                this.formItem.outline = '';
+                this.formItem.content = '';
+                this.formItem.category = '';
+            },
+            checkForm(){
+                if(isEmptyOrUndefined(this.formItem.title)){
+                    this.tipMessage("warning", "标题不能为空");
+                    return false;
+                }
+                if(isEmptyOrUndefined(this.formItem.category)){
+                    this.tipMessage("warning", "请选择分类");
+                    return false;
+                }
+                if(isEmptyOrUndefined(this.formItem.outline)){
+                    this.tipMessage("warning", "请填写概要");
+                    return false;
+                }
+                if(isEmptyOrUndefined(this.formItem.uploadId)){
+                    this.tipMessage("warning", "请先上传附件");
+                    return false;
+                }
+                if(isEmptyOrUndefined(this.formItem.content)){
+                    this.tipMessage("warning", "请填写正文");
+                    return false;
+                }
+                return true;
+            }
             
         }
     }

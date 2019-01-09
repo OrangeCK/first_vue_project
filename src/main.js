@@ -5,8 +5,11 @@ import 'iview/dist/styles/iview.css';
 import 'iview/dist/iview.min.js';
 import iView from 'iview';
 import $ from 'jquery';
+import mavonEditor from 'mavon-editor';
+import 'mavon-editor/dist/css/index.css';
 
 Vue.use(iView);
+Vue.use(mavonEditor);
 
 /*axios*/
 import axios from 'axios'
