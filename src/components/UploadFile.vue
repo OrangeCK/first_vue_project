@@ -3,8 +3,14 @@
         <Divider orientation="left"><h4>填写信息</h4></Divider>
         <div class="content">
             <Form :model="formItem" :label-width="80">
+                <!-- <FormItem style="text-align: right">
+                    
+                </FormItem> -->
                 <FormItem label="标题：" >
                     <Input v-model="formItem.title" placeholder="请输入标题..." class="inp"></Input>
+                    <Button style="float:right;" v-if="formItem.id == null || formItem.id == ''" type="warning" @click="submitImage" :style="{width:'100px'}">新增</Button>
+                    <Button style="float:right;" v-if="formItem.id != null && formItem.id != ''" type="warning" @click="updateImage" :style="{width:'100px'}">保存</Button>
+                    <Button style="margin-right: 8px;float:right;" @click="resetImage" :style="{width:'100px'}">Reset</Button>
                 </FormItem>
                 <FormItem label="分类：" >
                     <Select v-model="formItem.category" class="inp">
@@ -31,12 +37,7 @@
                     </Upload>
                 </FormItem>
                 <FormItem label="正文：">
-                    <Input v-model="formItem.content" type="textarea" :autosize="{minRows: 5,maxRows: 10}" placeholder="Enter something..."></Input>
-                </FormItem>
-                <FormItem>
-                    <Button v-if="formItem.id == null || formItem.id == ''" type="warning" @click="submitImage" :style="{width:'100px'}">新增</Button>
-                    <Button v-if="formItem.id != null && formItem.id != ''" type="warning" @click="updateImage" :style="{width:'100px'}">保存</Button>
-                    <Button style="margin-left: 8px" @click="resetImage" :style="{width:'100px'}">Reset</Button>
+                        <mavon-editor v-model="markdownEdit.value" style="height:500px;" @change="changeData"/>
                 </FormItem>
             </Form>
         </div>
@@ -57,6 +58,9 @@ import {isEmptyOrUndefined,tipMessage} from '../js/util'
 export default {
         data () {
             return {
+                markdownEdit:{
+                    value: '# 你好'
+                },
                 formItem: {
                     id: null,
                     title: '',
@@ -68,7 +72,10 @@ export default {
             }
         },
         created(){
-            
+            let id = this.$route.params.id;
+            if(!isEmptyOrUndefined(id)){
+                this.getImage(id);
+            }
         },
         methods: {
             // 提示信息
@@ -112,6 +119,22 @@ export default {
                     this.formItem.uploadId = null;
                     this.tipMessage("info", "删除成功");
                 });  
+            },
+            changeData(value, render) {
+                this.formItem.content = render;
+                console.log("render", render);
+            },
+            getImage(id){
+                this.$axios.post('/image/imageDetail?id=' + id).then(rs => {
+                    console.log(rs);
+                    let data = rs.data;
+                    this.formItem.id = data.data.id;
+                    this.formItem.title = data.data.title;
+                    this.formItem.outline = data.data.outline;
+                    this.formItem.category = data.data.category;
+                    this.markdownEdit.value = data.data.markdownText;
+                    this.formItem.content = data.data.content;
+                });
             },
             submitImage(){
                 // 提交之前的校验

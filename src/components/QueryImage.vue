@@ -80,7 +80,8 @@ export default {
                         },
                         {
                             "title":"正文",
-                            "key":"content"
+                            "key":"content",
+                            tooltip:true
                         },
                         {
                             "title":"操作",
@@ -99,7 +100,7 @@ export default {
                                         },
                                         on: {
                                             click: () => {
-                                                this.editEmployee(params);
+                                                this.editImage(params.row.id);
                                             }
                                         }
                                     }, 'Edit'),
@@ -171,6 +172,14 @@ export default {
                     this.imageTable.loading = false;
                 });  
             },
+            editImage(id){
+                this.$router.push({
+                    name: 'UploadFile',
+                    params: {
+                        id: id
+                    }
+                });
+            }
         }
     }
 </script>
