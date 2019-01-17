@@ -53,6 +53,7 @@ div .inp{
 
 </style>
 <script>
+import {isEmptyOrUndefined} from '../js/util'
 export default {
         data () {
             return {
@@ -116,10 +117,10 @@ export default {
                                         },
                                         on: {
                                             click: () => {
-                                                this.disableEmployee(params.row.id);
+                                                this.disableImage(params.row.id);
                                             }
                                         }
-                                    }, 'Del')   
+                                    }, 'Disable')   
                                 ])
                             }
                         }
@@ -158,6 +159,35 @@ export default {
                 this.imageTable.page.pageSize = pageSize;
                 this.searchImage(1);
             },
+            // 提示信息
+            tipMessage(type,msg){
+                switch(type){
+                    case 'info':
+                        this.$Message.info({
+                            content: msg,
+                            duration: 5
+                        });
+                        break;
+                    case 'warning':
+                        this.$Message.warning({
+                            content: msg,
+                            duration: 5
+                        });
+                        break;
+                    case 'success':
+                        this.$Message.success({
+                            content: msg,
+                            duration: 5
+                        });
+                        break;
+                    case 'error':
+                        this.$Message.error({
+                            content: msg,
+                            duration: 5
+                        });
+                        break;
+                }
+            },
             searchImage(page){
                 this.imageTable.loading = true;
                 this.$axios.post('/image/imagePageList',{
@@ -179,6 +209,27 @@ export default {
                         id: id
                     }
                 });
+            },
+            disableImage(id){
+                if(isEmptyOrUndefined(id)){
+                    this.tipMessage("warning", "删除的id不存在");
+                }else{
+                    this.$Modal.confirm({
+                        title: "警告",
+                        content: '<p>确定要删除数据吗？</p>',
+                        onOk: () => {
+                            this.$axios.post("/image/disableImage?id="+id).then(response => {
+                                let data = response.data;
+                                if(data.status == 'succ'){
+                                    this.tipMessage("info","操作成功");
+                                    this.searchImage(1);
+                                }else{
+                                    this.tipMessage("error",data.msg);
+                                }
+                            });    
+                        }
+                    });
+                }
             }
         }
     }

@@ -26,7 +26,10 @@
                     <Upload
                         multiple
                         :on-success="uploadSuccess"
+                        :on-error="uploadFail"
                         :on-remove="removeUpload"
+                        :headers="headers"
+                        :before-upload="addHeaders"
                         type="drag"
                         name="multipartFile"
                         action="/upload/uploadImg">
@@ -54,13 +57,15 @@ form .inp{
 }
 </style>
 <script>
-import {isEmptyOrUndefined,tipMessage} from '../js/util'
+import {setCookie,getCookie,delCookie} from '../js/cookieUtil.js'
+import {isEmptyOrUndefined} from '../js/util'
 export default {
         data () {
             return {
                 markdownEdit:{
                     value: '# 你好'
                 },
+                headers:{},
                 formItem: {
                     id: null,
                     title: '',
@@ -113,6 +118,9 @@ export default {
                     this.formItem.uploadId = data.id;
                 }
             },
+            uploadFail(error){
+                this.tipMessage("error", "上传失败");
+            },
             removeUpload(response, file){
                 let data = response.response.data;
                 this.$axios.post('/upload/deleteUploadImg?id=' + data.id).then(rs => {
@@ -135,6 +143,12 @@ export default {
                     this.markdownEdit.value = data.data.markdownText;
                     this.formItem.content = data.data.content;
                 });
+            },
+            addHeaders(){
+                let token = getCookie("token");
+                let refreshToken = getCookie("refreshToken");
+                let jsonStr = '{"Authorization":"'+token+'","Refresh_Token":"'+refreshToken+'"}';
+                this.headers = JSON.parse(jsonStr);
             },
             submitImage(){
                 // 提交之前的校验
