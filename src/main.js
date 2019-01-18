@@ -7,6 +7,7 @@ import iView from 'iview';
 import $ from 'jquery';
 import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
+import './assets/iconfont/iconfont.css'
 
 Vue.use(iView);
 Vue.use(mavonEditor);
@@ -14,18 +15,20 @@ Vue.use(mavonEditor);
 /*axios*/
 import axios from 'axios'
 import {setCookie,getCookie,delCookie} from './js/cookieUtil.js'
+import ivueCommon from './js/ivueCommon'
 axios.defaults.withcredentials = true;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 axios.defaults.withcredentials = true;
 axios.defaults.timeout = 150000;
 Vue.prototype.$axios = axios;
-
 Vue.config.productionTip = false
+
+Vue.use(ivueCommon);
 
 // http request 拦截器
 axios.interceptors.request.use(
   config => {
-      console.log("正在请求", config);
+      // console.log("正在请求", config);
       let token = getCookie("token");
       let refreshToken = getCookie("refreshToken");
       if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
@@ -41,7 +44,7 @@ axios.interceptors.request.use(
 
 // http response拦截器
 axios.interceptors.response.use(data => {// 响应成功关闭loading
-  console.log("成功响应",data);
+  // console.log("成功响应",data);
   let token = data.headers.authorization;
   if(token){
     setCookie('token', token);
@@ -49,7 +52,7 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
   return data
  }, 
  error => {
-    console.log("失败响应",error.response);
+    // console.log("失败响应",error.response);
     if(error.response){
       switch(error.response.status){
         case 401:
@@ -71,11 +74,17 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
   return Promise.reject(error)
  })
 
+// let vm = new Vue({
+//   el: '#app',
+//   router,
+//   render: h => h(App)
+// })
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   // template: '<App/>',
-  // components: { App },
+  // components: { App }
   render: h => h(App)
 })

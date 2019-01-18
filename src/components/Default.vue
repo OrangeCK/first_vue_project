@@ -28,6 +28,7 @@
                     <div class="userInfo">
                         <img src="../assets/user.png" /> 
                         <label style="font-weight: normal;">橙子味栗子</label>
+                        <Icon class="quit_user" @click="quit" custom="iconfont icon-tuichu1" size="24"/>
                     </div>
                 </div> 
             </Header>
@@ -85,11 +86,19 @@
         position:absolute;
         cursor: pointer;
     }
+    .quit_user{
+        margin-left:10px;
+        cursor: pointer;
+    }
+    .quit_user:hover{
+		transform: scale(1.1);
+	 }
     /* .card-div{
         min-height: 500px;
     } */
 </style>
 <script>
+import {setCookie,getCookie,delCookie} from '../js/cookieUtil'
     export default {
         data(){
             return{
@@ -115,6 +124,22 @@
 
         },
         methods:{
+            quit(){
+                this.$Modal.confirm({
+                    title: "警告",
+                    content: '<p>确定要退出登录吗？</p>',
+                    onOk: () => {
+                        this.$axios.post("/login/quitLogin").then(response => {
+                            let data = response.data;
+                            delCookie("token");
+                            delCookie("refreshToken");
+                            this.$router.replace({
+                                path:'/Login'                            
+                            });
+                        });    
+                    }
+                });
+            },
             jumpIndex(){
                 this.$router.push({ path: 'TestVue2' });  
                 this.activeName = 'ssss';

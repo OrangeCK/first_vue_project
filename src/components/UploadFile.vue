@@ -11,6 +11,7 @@
                     <Button style="float:right;" v-if="formItem.id == null || formItem.id == ''" type="warning" @click="submitImage" :style="{width:'100px'}">新增</Button>
                     <Button style="float:right;" v-if="formItem.id != null && formItem.id != ''" type="warning" @click="updateImage" :style="{width:'100px'}">保存</Button>
                     <Button style="margin-right: 8px;float:right;" @click="resetImage" :style="{width:'100px'}">Reset</Button>
+                    <Button style="margin-right: 8px;float:right;" @click="download(15)" :style="{width:'100px'}">下载</Button>
                 </FormItem>
                 <FormItem label="分类：" >
                     <Select v-model="formItem.category" class="inp">
@@ -29,7 +30,6 @@
                         :on-error="uploadFail"
                         :on-remove="removeUpload"
                         :headers="headers"
-                        :before-upload="addHeaders"
                         type="drag"
                         name="multipartFile"
                         action="/upload/uploadImg">
@@ -81,37 +81,12 @@ export default {
             if(!isEmptyOrUndefined(id)){
                 this.getImage(id);
             }
+            let token = getCookie("token");
+            let refreshToken = getCookie("refreshToken");
+            let jsonStr = '{"Authorization":"'+token+'","Refresh_Token":"'+refreshToken+'"}';
+            this.headers = JSON.parse(jsonStr);
         },
         methods: {
-            // 提示信息
-            tipMessage(type,msg){
-                switch(type){
-                    case 'info':
-                        this.$Message.info({
-                            content: msg,
-                            duration: 5
-                        });
-                        break;
-                    case 'warning':
-                        this.$Message.warning({
-                            content: msg,
-                            duration: 5
-                        });
-                        break;
-                    case 'success':
-                        this.$Message.success({
-                            content: msg,
-                            duration: 5
-                        });
-                        break;
-                    case 'error':
-                        this.$Message.error({
-                            content: msg,
-                            duration: 5
-                        });
-                        break;
-                }
-            },
             uploadSuccess(response){
                 let data = response.data;
                 if(response.status === 'succ'){
@@ -128,6 +103,28 @@ export default {
                     this.tipMessage("info", "删除成功");
                 });  
             },
+            download(id){
+                this.$axios({ // 用axios发送post请求
+                    method: 'post',
+                    url: '/upload/downloadImg?id='+id, // 请求地址
+                    responseType: 'arraybuffer', 
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    timeout:1000*60*5
+                }).then(rs => {
+                    let blob = new Blob([rs.data]);
+                    let fileName = '下载测试.jpg';
+                    let link = document.createElement('a');
+                    link.download = fileName;
+                    link.style.display = 'none';
+                    link.href = URL.createObjectURL(blob);
+                    document.body.appendChild(link);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                    document.body.removeChild(link);
+                })
+            },
             changeData(value, render) {
                 this.formItem.content = render;
                 console.log("render", render);
@@ -143,12 +140,6 @@ export default {
                     this.markdownEdit.value = data.data.markdownText;
                     this.formItem.content = data.data.content;
                 });
-            },
-            addHeaders(){
-                let token = getCookie("token");
-                let refreshToken = getCookie("refreshToken");
-                let jsonStr = '{"Authorization":"'+token+'","Refresh_Token":"'+refreshToken+'"}';
-                this.headers = JSON.parse(jsonStr);
             },
             submitImage(){
                 // 提交之前的校验

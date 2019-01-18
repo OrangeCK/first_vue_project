@@ -159,35 +159,6 @@ export default {
                 this.imageTable.page.pageSize = pageSize;
                 this.searchImage(1);
             },
-            // 提示信息
-            tipMessage(type,msg){
-                switch(type){
-                    case 'info':
-                        this.$Message.info({
-                            content: msg,
-                            duration: 5
-                        });
-                        break;
-                    case 'warning':
-                        this.$Message.warning({
-                            content: msg,
-                            duration: 5
-                        });
-                        break;
-                    case 'success':
-                        this.$Message.success({
-                            content: msg,
-                            duration: 5
-                        });
-                        break;
-                    case 'error':
-                        this.$Message.error({
-                            content: msg,
-                            duration: 5
-                        });
-                        break;
-                }
-            },
             searchImage(page){
                 this.imageTable.loading = true;
                 this.$axios.post('/image/imagePageList',{
