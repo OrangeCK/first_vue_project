@@ -21,6 +21,9 @@ export default new Router({
       path:'/',
       name:'Default',
       component: Default,
+      meta:{
+        requireAuth: true
+      },
       children:[
         {
           path: 'TestVue',
@@ -51,3 +54,4 @@ export default new Router({
     }
   ]
 })
+

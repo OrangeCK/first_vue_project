@@ -26,8 +26,9 @@
                     <img src="../assets/logo.png" /> 
                     <label>综合物料管理平台</label>
                     <div class="userInfo">
-                        <img src="../assets/user.png" /> 
-                        <label style="font-weight: normal;">橙子味栗子</label>
+                        <!-- <img src="../assets/user.png" />  -->
+                        <Icon custom="iconfont icon-wode1" size="36" />
+                        <span>{{$store.state.loginName}}</span>
                         <Icon class="quit_user" @click="quit" custom="iconfont icon-tuichu1" size="24"/>
                     </div>
                 </div> 
@@ -103,6 +104,7 @@ import {setCookie,getCookie,delCookie} from '../js/cookieUtil'
         data(){
             return{
                 activeName:'Employee',
+                loginName:this.global.loginName,
                 siderShow:true,
                 contentTabs:{
                     tabList:[]

@@ -7,8 +7,8 @@
                 <Select :style="{width: '200px'}">
                     <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
-                <Button type="warning" icon="ios-search" @click="searchEmployee(1)">Search</Button>
-                <Button type="warning" icon="md-add" @click="addEmployee">Add</Button>
+                <Button type="warning" custom-icon="iconfont icon-sousuo" @click="searchEmployee(1)">Search</Button>
+                <Button type="warning" custom-icon="iconfont icon-jiajianzujianjiahao" @click="addEmployee">Add</Button>
             </div>
         </div>
         <Divider orientation="left"><h4>查询结果</h4></Divider>
@@ -26,7 +26,7 @@
                     <div>Loading</div>
                 </Spin>
                 <p slot="header" style="color:#f60;text-align:left">
-                    <Icon type="md-add"></Icon>
+                    <Icon custom="iconfont icon-changyonggoupiaorenbianji"></Icon>
                     <span>用户新增</span>
                 </p>
                 <Form :model="addModal.form" ref="addModal.form" :rules="addModal.ruleValidate" :label-width="70" style="height:220px;">
@@ -258,7 +258,7 @@ export default {
                                             type: 'warning',
                                             size: 'default',
                                             ghost: true,
-                                            icon: 'ios-create-outline'
+                                            'custom-icon': 'iconfont icon-changyonggoupiaorenbianji'
                                         },
                                         style: {
                                             padding: '5px 10px 5px 10px'
@@ -274,7 +274,7 @@ export default {
                                             type: 'error',
                                             size: 'default',
                                             ghost: true,
-                                            icon: 'ios-trash-outline'
+                                            'custom-icon': 'iconfont icon-shanchu'
                                         },
                                         style: {
                                             padding: '5px 10px 5px 10px'

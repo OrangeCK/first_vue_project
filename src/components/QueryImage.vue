@@ -4,7 +4,7 @@
             <div class="tools" ref="tools" :class="{'is_fixed' : isFixed}">
                 <Input  placeholder="请输入标题..." v-model="searchForm.title" clearable class="inp"/>
                 <Input  placeholder="请输入类别..." v-model="searchForm.category" clearable class="inp"/>
-                <Button type="warning" icon="ios-search" @click="searchImage(1)">Search</Button>
+                <Button type="warning" custom-icon="iconfont icon-sousuo" @click="searchImage(1)">Search</Button>
             </div>
         </div>
         <Divider orientation="left"><h4>查询结果</h4></Divider>
@@ -94,7 +94,7 @@ export default {
                                             type: 'warning',
                                             size: 'default',
                                             ghost: true,
-                                            icon: 'ios-create-outline'
+                                            'custom-icon': 'iconfont icon-changyonggoupiaorenbianji'
                                         },
                                         style: {
                                             padding: '5px 10px 5px 10px'
@@ -110,7 +110,7 @@ export default {
                                             type: 'error',
                                             size: 'default',
                                             ghost: true,
-                                            icon: 'ios-trash-outline'
+                                            'custom-icon': 'iconfont icon-shanchu'
                                         },
                                         style: {
                                             padding: '5px 10px 5px 10px'
@@ -120,7 +120,7 @@ export default {
                                                 this.disableImage(params.row.id);
                                             }
                                         }
-                                    }, 'Disable')   
+                                    }, 'Disa')   
                                 ])
                             }
                         }

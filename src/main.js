@@ -8,6 +8,8 @@ import $ from 'jquery';
 import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
 import './assets/iconfont/iconfont.css'
+import global from '@/js/global'
+import store from './js/store'
 
 Vue.use(iView);
 Vue.use(mavonEditor);
@@ -21,6 +23,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.withcredentials = true;
 axios.defaults.timeout = 150000;
 Vue.prototype.$axios = axios;
+Vue.prototype.global = global;
 Vue.config.productionTip = false
 
 Vue.use(ivueCommon);
@@ -74,16 +77,29 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
   return Promise.reject(error)
  })
 
-// let vm = new Vue({
-//   el: '#app',
-//   router,
-//   render: h => h(App)
-// })
+ router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
+      let token = getCookie("token");
+      if (token) {  // 通过vuex state获取当前的token是否存在
+          next();
+      }
+      else {
+          next({
+              path: '/Login',
+              query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+          })
+      }
+  }
+  else {
+      next();
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store: store,
   // template: '<App/>',
   // components: { App }
   render: h => h(App)

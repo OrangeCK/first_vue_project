@@ -104,26 +104,27 @@ export default {
                 });  
             },
             download(id){
-                this.$axios({ // 用axios发送post请求
-                    method: 'post',
-                    url: '/upload/downloadImg?id='+id, // 请求地址
-                    responseType: 'arraybuffer', 
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8'
-                    },
-                    timeout:1000*60*5
-                }).then(rs => {
-                    let blob = new Blob([rs.data]);
-                    let fileName = '下载测试.jpg';
-                    let link = document.createElement('a');
-                    link.download = fileName;
-                    link.style.display = 'none';
-                    link.href = URL.createObjectURL(blob);
-                    document.body.appendChild(link);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                    document.body.removeChild(link);
-                })
+                // this.$store.commit('add');
+                // this.$axios({ // 用axios发送post请求
+                //     method: 'post',
+                //     url: '/upload/downloadImg?id='+id, // 请求地址
+                //     responseType: 'arraybuffer', 
+                //     headers: {
+                //         'Content-Type': 'application/json;charset=utf-8'
+                //     },
+                //     timeout:1000*60*5
+                // }).then(rs => {
+                //     let blob = new Blob([rs.data]);
+                //     let fileName = '下载测试.jpg';
+                //     let link = document.createElement('a');
+                //     link.download = fileName;
+                //     link.style.display = 'none';
+                //     link.href = URL.createObjectURL(blob);
+                //     document.body.appendChild(link);
+                //     link.click();
+                //     URL.revokeObjectURL(link.href);
+                //     document.body.removeChild(link);
+                // })
             },
             changeData(value, render) {
                 this.formItem.content = render;

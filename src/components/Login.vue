@@ -129,7 +129,6 @@
 <script>
 import jsencrypt from '../../static/js/jsencrypt.min.js'
 import {setCookie,getCookie} from '../js/cookieUtil.js'
-
   export default {
     data() {
       return {
@@ -153,6 +152,7 @@ import {setCookie,getCookie} from '../js/cookieUtil.js'
             if(response.data.status == 'succ'){
               setCookie('token', response.data.data.Authorization);
               setCookie('refreshToken', response.data.data.Refresh_Token);
+              this.$store.commit('SET_LoginName', response.data.data.loginName);
               this.$router.push({ path: "/" });
             }else{
               this.$Message.error({
