@@ -2,7 +2,7 @@
     <div class="layout" style="min-width:1200px;border-bottom-width: 0px;border-top-width: 0px;">
         <Layout :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
             <Sider>
-                <Menu theme="dark" width="auto"  @on-select="changeTab" :active-name='activeName' :accordion=true>
+                <Menu theme="dark" width="auto"  @on-select="changeTab" :open-names="menusShow" :active-name="activeName">
                     <div class="menuTop" @click="jumpIndex">
                         <Icon type="ios-home" size="28" color="#fff"></Icon>
                         <label>首页</label>
@@ -12,7 +12,7 @@
                             <Icon :type="menu.iconType" size="18"></Icon>
                             {{menu.menuName}}
                         </template>
-                        <MenuItem :name="children.mName" v-for="(children,index) in menu.menuList" :key="index">
+                        <MenuItem :name="children.mCode" v-for="(children,index) in menu.menuList" :key="index">
                             <Icon :type="children.iconType2" size="16"></Icon>
                             {{children.mName}}
                         </MenuItem>
@@ -35,7 +35,7 @@
             </Header>
             <Content :style="{padding: '0px 16px 16px 16px',background: 'rgb(220, 242, 245)'}" >
                 <Breadcrumb :style="{padding: '10px 0'}">
-                    <BreadcrumbItem v-for="(tab,index) in contentTabs.tabList" :key="index">{{tab.name}}</BreadcrumbItem>
+                    <BreadcrumbItem v-for="(tab,index) in getBreadCrumbs" :key="index">{{tab.name}}</BreadcrumbItem>
                 </Breadcrumb>
                 <Card>
                     <div class="card-div">
@@ -103,16 +103,17 @@ import {setCookie,getCookie,delCookie} from '../js/cookieUtil'
     export default {
         data(){
             return{
-                activeName:'Employee',
+                activeName:this.$store.state.activeName,
                 loginName:this.global.loginName,
                 siderShow:true,
+                menusShow:[],
                 contentTabs:{
                     tabList:[]
                 },
                 form:{
                     menus:[
-                        {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mName:'TestVue',iconType2:'ios-basket-outline'},{mName:'Employee',iconType2:'ios-basket-outline'}]},
-                        {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mName:'UploadFile',iconType2:'md-cube'},{mName:'QueryImage',iconType2:'md-cube'},{mName:'MarkdownEdit',iconType2:'md-cube'}]}
+                        {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mCode:'TestVue',mName:'测试VUE',iconType2:'ios-basket-outline'},{mCode:'Employee',mName:'用户管理',iconType2:'ios-basket-outline'}]},
+                        {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mCode:'UploadFile',mName:'上传文件',iconType2:'md-cube'},{mCode:'QueryImage',mName:'照片查询',iconType2:'md-cube'},{mCode:'MarkdownEdit',mName:'Markdown管理',iconType2:'md-cube'}]}
                         // {id:6,menuName:'应用管理',menuNum:'0138',iconType:'ios-keypad',menuList:[{mName:'菜单42号',iconType2:'ios-keypad-outline'},{mName:'菜单31号',iconType2:'ios-keypad-outline'}]},
                         // {id:7,menuName:'盒子管理',menuNum:'0138',iconType:'ios-list-box-outline',menuList:[{mName:'菜单43号',iconType2:'ios-list-box-outline'},{mName:'菜单32号',iconType2:'ios-list-box-outline'}]},
                         // {id:8,menuName:'浏览管理',menuNum:'0138',iconType:'ios-browsers',menuList:[{mName:'菜单44号',iconType2:'ios-browsers-outline'},{mName:'菜单33号',iconType2:'ios-browsers-outline'}]},
@@ -123,7 +124,12 @@ import {setCookie,getCookie,delCookie} from '../js/cookieUtil'
             }
         },
         created(){
-
+            this.menusShow = this.form.menus[0].menuList;
+        },
+        computed:{
+            getBreadCrumbs(){
+                return this.$store.getters.getBreadCrumbs;
+            }
         },
         methods:{
             quit(){
@@ -152,19 +158,21 @@ import {setCookie,getCookie,delCookie} from '../js/cookieUtil'
                 for(var i=0;i<this.form.menus.length;i++){
                     var menuList = this.form.menus[i].menuList;
                     for(var j=0;j<menuList.length;j++){
-                        if(menuList[j].mName == name){
+                        if(menuList[j].mCode == name){
                             var myobj={
                                 name:this.form.menus[i].menuName
                             }
-                            this.contentTabs.tabList.push(myobj);  
+                            this.contentTabs.tabList.push(JSON.stringify(myobj));  
                             var myobj1={
-                                name:name
+                                name:menuList[j].mName
                             }
-                            this.contentTabs.tabList.push(myobj1);
+                            this.contentTabs.tabList.push(JSON.stringify(myobj1));
                             breakFlag = true;
                             break;  
                         }
-                    } 
+                    }
+                    this.$store.commit('SET_ActiveName', name);
+                    this.$store.commit('SET_BreadCrumbs', this.contentTabs.tabList.join(","));
                     if(breakFlag){break;}
                 }
                 this.$router.push({ path: name });

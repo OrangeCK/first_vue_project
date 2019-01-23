@@ -153,6 +153,9 @@ import {setCookie,getCookie} from '../js/cookieUtil.js'
               setCookie('token', response.data.data.Authorization);
               setCookie('refreshToken', response.data.data.Refresh_Token);
               this.$store.commit('SET_LoginName', response.data.data.loginName);
+              this.$store.commit('SET_UserId', response.data.data.id);
+              this.$store.commit('SET_BreadCrumbs', '[]');
+              this.$store.commit('SET_ActiveName', '');
               this.$router.push({ path: "/" });
             }else{
               this.$Message.error({
