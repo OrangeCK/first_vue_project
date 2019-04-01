@@ -149,7 +149,7 @@ import {setCookie,getCookie} from '../js/cookieUtil.js'
             loginName:this.loginForm.account,
             password:this.loginForm.password,
           }).then(response => {
-            if(response.data.status == 'succ'){
+            if(response.data.success == true){
               setCookie('token', response.data.data.Authorization);
               setCookie('refreshToken', response.data.data.Refresh_Token);
               this.$store.commit('SET_LoginName', response.data.data.loginName);

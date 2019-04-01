@@ -27,7 +27,7 @@
                 </Spin>
                 <p slot="header" style="color:#f60;text-align:left">
                     <Icon custom="iconfont icon-changyonggoupiaorenbianji"></Icon>
-                    <span>用户新增</span>
+                    <span>{{formModalName}}</span>
                 </p>
                 <Form :model="addModal.form" ref="addModal.form" :rules="addModal.ruleValidate" :label-width="70" style="height:220px;">
                     <div class="div_form">
@@ -209,6 +209,7 @@ export default {
                             required: true, message: '角色不能为空', trigger: 'change'
                         }
                     },
+                    formModalName:"",
                     form:{
                         id:null,
                         userName:'',
@@ -402,10 +403,11 @@ export default {
                 }
             },
             addEmployee(){
+                this.formModalName = '用户新增';
                 this.addModal.show = true;
             },
             editEmployee(params){
-                console.log(params);
+                this.formModalName = '用户编辑';
                 this.addModal.show = true;
                 this.addModal.form.id = params.row.id;
                 this.addModal.form.loginName = params.row.loginName;
@@ -414,6 +416,8 @@ export default {
                 this.addModal.form.age = params.row.age.toString();
                 this.addModal.form.sex = params.row.sex;
                 this.addModal.form.password = params.row.password;
+                this.addModal.form.jobNumber = params.row.jobNumber;
+                this.addModal.form.role = params.row.jobNumber;
             },
             submitEmployee(name){
                  this.$refs[name].validate((valid) => {
@@ -437,7 +441,7 @@ export default {
                             }
                         }).then(response => {
                             let data = response.data;
-                            if(data.status == 'succ'){
+                            if(data.success == true){
                                 this.tipMessage("info","提交成功");
                                 this.addModal.closable = true;
                                 this.addModal.loading = false;
@@ -461,7 +465,7 @@ export default {
                     onOk: () => {
                         this.$axios.post("/employee/disableEmployee?id="+id).then(response => {
                             let data = response.data;
-                            if(data.status == 'succ'){
+                            if(data.success == true){
                                 this.tipMessage("info","操作成功");
                                 this.searchEmployee(1);
                             }else{

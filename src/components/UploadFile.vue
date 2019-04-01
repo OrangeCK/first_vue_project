@@ -71,6 +71,7 @@ export default {
                     title: '',
                     outline: '',
                     content: '',
+                    markdownText:'',
                     uploadId: null,
                     category: ''                    
                 }              
@@ -89,7 +90,7 @@ export default {
         methods: {
             uploadSuccess(response){
                 let data = response.data;
-                if(response.status === 'succ'){
+                if(response.success == true){
                     this.formItem.uploadId = data.id;
                 }
             },
@@ -128,7 +129,7 @@ export default {
             },
             changeData(value, render) {
                 this.formItem.content = render;
-                console.log("render", render);
+                this.formItem.markdownText = value;
             },
             getImage(id){
                 this.$axios.post('/image/imageDetail?id=' + id).then(rs => {
@@ -151,6 +152,7 @@ export default {
                     'title':this.formItem.title,
                     'outline':this.formItem.outline,
                     'content':this.formItem.content,
+                    'markdownText':this.formItem.markdownText,
                     'category':this.formItem.category,
                     'uploadFile':{
                         'id':this.formItem.uploadId
@@ -171,6 +173,7 @@ export default {
                     'title':this.formItem.title,
                     'outline':this.formItem.outline,
                     'content':this.formItem.content,
+                    'markdownText':this.formItem.markdownText,
                     'category':this.formItem.category,
                     'uploadFile':{
                         'id':this.formItem.uploadId

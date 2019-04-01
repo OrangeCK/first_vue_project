@@ -26,11 +26,6 @@ export default new Router({
       },
       children:[
         {
-          path: 'TestVue',
-          name: 'TestVue',
-          component: TestVue
-        },
-        {
           path: 'Employee',
           name: 'Employee',
           component: Employee

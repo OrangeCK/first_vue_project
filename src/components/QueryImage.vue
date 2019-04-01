@@ -191,7 +191,7 @@ export default {
                         onOk: () => {
                             this.$axios.post("/image/disableImage?id="+id).then(response => {
                                 let data = response.data;
-                                if(data.status == 'succ'){
+                                if(data.success == true){
                                     this.tipMessage("info","操作成功");
                                     this.searchImage(1);
                                 }else{

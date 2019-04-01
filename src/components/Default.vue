@@ -94,6 +94,12 @@
     .quit_user:hover{
 		transform: scale(1.1);
 	 }
+    .ivu-modal-mask{
+        z-index: 1600;
+    }
+    .ivu-modal-wrap{
+        z-index: 1600;
+    }
     /* .card-div{
         min-height: 500px;
     } */
@@ -112,13 +118,8 @@ import {setCookie,getCookie,delCookie} from '../js/cookieUtil'
                 },
                 form:{
                     menus:[
-                        {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mCode:'TestVue',mName:'测试VUE',iconType2:'ios-basket-outline'},{mCode:'Employee',mName:'用户管理',iconType2:'ios-basket-outline'}]},
-                        {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mCode:'UploadFile',mName:'上传文件',iconType2:'md-cube'},{mCode:'QueryImage',mName:'照片查询',iconType2:'md-cube'},{mCode:'MarkdownEdit',mName:'Markdown管理',iconType2:'md-cube'}]}
-                        // {id:6,menuName:'应用管理',menuNum:'0138',iconType:'ios-keypad',menuList:[{mName:'菜单42号',iconType2:'ios-keypad-outline'},{mName:'菜单31号',iconType2:'ios-keypad-outline'}]},
-                        // {id:7,menuName:'盒子管理',menuNum:'0138',iconType:'ios-list-box-outline',menuList:[{mName:'菜单43号',iconType2:'ios-list-box-outline'},{mName:'菜单32号',iconType2:'ios-list-box-outline'}]},
-                        // {id:8,menuName:'浏览管理',menuNum:'0138',iconType:'ios-browsers',menuList:[{mName:'菜单44号',iconType2:'ios-browsers-outline'},{mName:'菜单33号',iconType2:'ios-browsers-outline'}]},
-                        // {id:10,menuName:'用户管理',menuNum:'0138',iconType:'md-person',menuList:[{mName:'菜单45号',iconType2:'ios-person-outline'},{mName:'菜单34号',iconType2:'ios-person-outline'}]},
-                        // {id:9,menuName:'设置管理',menuNum:'0139',iconType:'ios-settings',menuList:[{mName:'菜单56号',iconType2:'ios-settings-outline'},{mName:'菜单61号',iconType2:'ios-settings-outline'}]}
+                        {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mCode:'Employee',mName:'用户管理',iconType2:'ios-basket-outline'}]},
+                        {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mCode:'UploadFile',mName:'新增博客',iconType2:'md-cube'},{mCode:'QueryImage',mName:'查询博客',iconType2:'md-cube'},{mCode:'MarkdownEdit',mName:'Markdown管理',iconType2:'md-cube'}]}
                     ]
                 }
             }

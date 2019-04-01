@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {isEmptyOrUndefined} from './util'
 Vue.use(Vuex)
 
 const state={
@@ -31,9 +32,12 @@ const mutations={
 }
 const getters = {
     getBreadCrumbs:function(state){
-        let breadCrumbsStr = state.breadCrumbs;
-        let breadCrumbsArr = breadCrumbsStr.split(',');
         let returnArr = [];
+        let breadCrumbsStr = state.breadCrumbs;
+        if(isEmptyOrUndefined(breadCrumbsStr)){
+            return returnArr;
+        }
+        let breadCrumbsArr = breadCrumbsStr.split(',');
         for(var i = 0; i < breadCrumbsArr.length; i++){
             returnArr.push(JSON.parse(breadCrumbsArr[i]));
         }
