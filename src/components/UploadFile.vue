@@ -32,7 +32,7 @@
                         :headers="headers"
                         type="drag"
                         name="multipartFile"
-                        action="/upload/uploadImg">
+                        action="/aliOss/uploadOss">
                         <div style="padding: 20px 0">
                             <Icon type="ios-cloud-upload" size="52" style="color: #ffad33"></Icon>
                             <p>Click or drag files here to upload</p>

@@ -1,14 +1,10 @@
 <template>
-    <div>
+    <div class="aa">
         <mavon-editor v-model="value" style="height:500px;" :defaultOpen="defaultData" @change="changeData"/>
         <!-- <mavon-editor v-html="value" :defaultOpen="defaultData" @change="changeData" /> -->
     </div>
 </template>
 
-<style scoped>
-
-
-</style>
 <script>
 export default {
         data () {

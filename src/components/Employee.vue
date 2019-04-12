@@ -27,7 +27,7 @@
                 </Spin>
                 <p slot="header" style="color:#f60;text-align:left">
                     <Icon custom="iconfont icon-changyonggoupiaorenbianji"></Icon>
-                    <span>{{formModalName}}</span>
+                    <span>{{addModal.formModalName}}</span>
                 </p>
                 <Form :model="addModal.form" ref="addModal.form" :rules="addModal.ruleValidate" :label-width="70" style="height:220px;">
                     <div class="div_form">
@@ -403,11 +403,11 @@ export default {
                 }
             },
             addEmployee(){
-                this.formModalName = '用户新增';
+                this.addModal.formModalName = '用户新增';
                 this.addModal.show = true;
             },
             editEmployee(params){
-                this.formModalName = '用户编辑';
+                this.addModal.formModalName = '用户编辑';
                 this.addModal.show = true;
                 this.addModal.form.id = params.row.id;
                 this.addModal.form.loginName = params.row.loginName;

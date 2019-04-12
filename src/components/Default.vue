@@ -23,8 +23,8 @@
         <Layout :style="{marginLeft: '200px'}">
             <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.3)'}" style="z-index: 1">
                 <div class="topBox">
-                    <img src="../assets/logo.png" /> 
-                    <label>综合物料管理平台</label>
+                    <!-- <img src="../assets/logo.png" />  -->
+                    <label>测试平台</label>
                     <div class="userInfo">
                         <!-- <img src="../assets/user.png" />  -->
                         <Icon custom="iconfont icon-wode1" size="36" />
@@ -94,12 +94,6 @@
     .quit_user:hover{
 		transform: scale(1.1);
 	 }
-    .ivu-modal-mask{
-        z-index: 1600;
-    }
-    .ivu-modal-wrap{
-        z-index: 1600;
-    }
     /* .card-div{
         min-height: 500px;
     } */
