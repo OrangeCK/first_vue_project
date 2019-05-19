@@ -332,15 +332,13 @@ export default {
             },
             searchEmployee(page){
                 this.empTable.loading = true;
-                this.$axios.post('/employee/employeePageList',{
+                this.$axios.post('/employee/employeePageList?pageIndex=' + page + '&pageSize=' + this.empTable.page.pageSize,{
                     'loginName':this.searchForm.loginName,
                     'userName':this.searchForm.userName,
-                    'page':page,
-                    'rows':this.empTable.page.pageSize
                 }).then(response => {
                     var data = response.data;
-                    this.empTable.datas = data.rows;
-                    this.empTable.page.total = data.total;
+                    this.empTable.datas = data.data.records;
+                    this.empTable.page.total = data.data.total;
                     this.empTable.loading = false;
                 });  
             },
@@ -424,10 +422,7 @@ export default {
                     if (valid) {
                         this.addModal.closable = false;
                         this.addModal.loading = true;
-                        let url = "/employee/addEmployee";
-                        if(this.addModal.form.id){
-                            url = "/employee/updateEmployee";
-                        }
+                        let url = "/employee/saveEmployee";
                         this.$axios.post(url,{
                             'id':this.addModal.form.id,
                             'loginName':this.addModal.form.loginName,
@@ -436,9 +431,9 @@ export default {
                             'age':this.addModal.form.age,
                             'sex':this.addModal.form.sex,
                             'password':this.addModal.form.password,
-                            'roles':{
+                            'rolePoList':[{
                                 'id':this.addModal.form.role
-                            }
+                            }]
                         }).then(response => {
                             let data = response.data;
                             if(data.success == true){
