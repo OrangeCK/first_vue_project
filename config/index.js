@@ -4,7 +4,7 @@
 
 const path = require('path')
 
-var requestUrl = "http://127.0.0.1:8082";
+var requestUrl = "http://127.0.0.1:8888";
 
 module.exports = {
   dev: {

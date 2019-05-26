@@ -39,11 +39,6 @@ export default new Router({
           path: 'QueryImage',
           name: 'QueryImage',
           component: QueryImage
-        },
-        {
-          path: 'MarkdownEdit',
-          name: 'MarkdownEdit',
-          component: MarkdownEdit
         }
       ]
     }

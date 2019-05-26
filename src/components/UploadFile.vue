@@ -148,12 +148,13 @@ export default {
                 if(!this.checkForm()){
                     return;
                 }
-                this.$axios.post('/image/addImage',{
+                this.$axios.post('/orangeblog/image/saveImageBlog',{
                     'title':this.formItem.title,
                     'outline':this.formItem.outline,
                     'content':this.formItem.content,
                     'markdownText':this.formItem.markdownText,
-                    'category':this.formItem.category,
+                    'categoryName':this.formItem.category,
+                    'categoryId':this.formItem.category,
                     'uploadFile':{
                         'id':this.formItem.uploadId
                     }
@@ -168,13 +169,14 @@ export default {
                 if(!this.checkForm()){
                     return;
                 }
-                this.$axios.post('/image/updateImage',{
+                this.$axios.post('/orangeblog/image/saveImageBlog',{
                     'id': this.formItem.id,
                     'title':this.formItem.title,
                     'outline':this.formItem.outline,
                     'content':this.formItem.content,
                     'markdownText':this.formItem.markdownText,
-                    'category':this.formItem.category,
+                    'categoryName':this.formItem.category,
+                    'categoryId':this.formItem.category,
                     'uploadFile':{
                         'id':this.formItem.uploadId
                     }

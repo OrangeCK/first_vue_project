@@ -113,7 +113,7 @@ import {setCookie,getCookie,delCookie} from '../js/cookieUtil'
                 form:{
                     menus:[
                         {id:4,menuName:'订单管理',menuNum:'0137',iconType:'ios-basket-outline',menuList:[{mCode:'Employee',mName:'用户管理',iconType2:'ios-basket-outline'}]},
-                        {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mCode:'UploadFile',mName:'新增博客',iconType2:'md-cube'},{mCode:'QueryImage',mName:'查询博客',iconType2:'md-cube'},{mCode:'MarkdownEdit',mName:'Markdown管理',iconType2:'md-cube'}]}
+                        {id:5,menuName:'魔方应用',menuNum:'0138',iconType:'md-cube',menuList:[{mCode:'UploadFile',mName:'新增博客',iconType2:'md-cube'},{mCode:'QueryImage',mName:'查询博客',iconType2:'md-cube'}]}
                     ]
                 }
             }

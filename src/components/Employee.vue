@@ -332,7 +332,7 @@ export default {
             },
             searchEmployee(page){
                 this.empTable.loading = true;
-                this.$axios.post('/employee/employeePageList?pageIndex=' + page + '&pageSize=' + this.empTable.page.pageSize,{
+                this.$axios.post('/orangeblog/employee/employeePageList?pageIndex=' + page + '&pageSize=' + this.empTable.page.pageSize,{
                     'loginName':this.searchForm.loginName,
                     'userName':this.searchForm.userName,
                 }).then(response => {
@@ -422,7 +422,7 @@ export default {
                     if (valid) {
                         this.addModal.closable = false;
                         this.addModal.loading = true;
-                        let url = "/employee/saveEmployee";
+                        let url = "/orangeblog/employee/saveEmployee";
                         this.$axios.post(url,{
                             'id':this.addModal.form.id,
                             'loginName':this.addModal.form.loginName,
@@ -458,7 +458,7 @@ export default {
                     title: "警告",
                     content: '<p>确定要删除用户吗？</p>',
                     onOk: () => {
-                        this.$axios.post("/employee/disableEmployee?id="+id).then(response => {
+                        this.$axios.post("/orangeblog/employee/disableEmployee?id="+id).then(response => {
                             let data = response.data;
                             if(data.success == true){
                                 this.tipMessage("info","操作成功");

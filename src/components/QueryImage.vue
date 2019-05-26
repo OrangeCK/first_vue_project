@@ -77,7 +77,7 @@ export default {
                         },
                         {
                             "title":"类别",
-                            "key":"category"
+                            "key":"categoryName"
                         },
                         {
                             "title":"正文",
@@ -161,13 +161,13 @@ export default {
             },
             searchImage(page){
                 this.imageTable.loading = true;
-                this.$axios.post('/image/imagePageList',{
+                this.$axios.post('/orangeblog/image/imageBlogPageList',{
                     'title':this.searchForm.title,
-                    'category':this.searchForm.category,
+                    'categoryName':this.searchForm.category,
                     'page':page,
                     'rows':this.imageTable.page.pageSize
                 }).then(response => {
-                    var data = response.data;
+                    var data = response.data.data;
                     this.imageTable.datas = data.rows;
                     this.imageTable.page.total = data.total;
                     this.imageTable.loading = false;
@@ -189,7 +189,7 @@ export default {
                         title: "警告",
                         content: '<p>确定要删除数据吗？</p>',
                         onOk: () => {
-                            this.$axios.post("/image/disableImage?id="+id).then(response => {
+                            this.$axios.post("/orangeblog/image/deleteImageBlog?id="+id).then(response => {
                                 let data = response.data;
                                 if(data.success == true){
                                     this.tipMessage("info","操作成功");
