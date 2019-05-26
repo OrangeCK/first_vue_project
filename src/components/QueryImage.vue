@@ -168,7 +168,7 @@ export default {
                     'rows':this.imageTable.page.pageSize
                 }).then(response => {
                     var data = response.data.data;
-                    this.imageTable.datas = data.rows;
+                    this.imageTable.datas = data.records;
                     this.imageTable.page.total = data.total;
                     this.imageTable.loading = false;
                 });  

@@ -11,7 +11,6 @@
                     <Button style="float:right;" v-if="formItem.id == null || formItem.id == ''" type="warning" @click="submitImage" :style="{width:'100px'}">新增</Button>
                     <Button style="float:right;" v-if="formItem.id != null && formItem.id != ''" type="warning" @click="updateImage" :style="{width:'100px'}">保存</Button>
                     <Button style="margin-right: 8px;float:right;" @click="resetImage" :style="{width:'100px'}">Reset</Button>
-                    <Button style="margin-right: 8px;float:right;" @click="download(15)" :style="{width:'100px'}">下载</Button>
                 </FormItem>
                 <FormItem label="分类：" >
                     <Select v-model="formItem.category" class="inp">
@@ -32,7 +31,7 @@
                         :headers="headers"
                         type="drag"
                         name="multipartFile"
-                        action="/aliOss/uploadOss">
+                        action="/orangeblog/aliOss/uploadToOss">
                         <div style="padding: 20px 0">
                             <Icon type="ios-cloud-upload" size="52" style="color: #ffad33"></Icon>
                             <p>Click or drag files here to upload</p>
@@ -72,8 +71,9 @@ export default {
                     outline: '',
                     content: '',
                     markdownText:'',
-                    uploadId: null,
-                    category: ''                    
+                    imageUrl: null,
+                    categoryName: '',
+                    categoryId: '',
                 }              
             }
         },
@@ -91,7 +91,7 @@ export default {
             uploadSuccess(response){
                 let data = response.data;
                 if(response.success == true){
-                    this.formItem.uploadId = data.id;
+                    this.formItem.imageUrl = data;
                 }
             },
             uploadFail(error){
@@ -100,7 +100,7 @@ export default {
             removeUpload(response, file){
                 let data = response.response.data;
                 this.$axios.post('/upload/deleteUploadImg?id=' + data.id).then(rs => {
-                    this.formItem.uploadId = null;
+                    this.formItem.imageUrl = null;
                     this.tipMessage("info", "删除成功");
                 });  
             },
@@ -138,7 +138,6 @@ export default {
                     this.formItem.id = data.data.id;
                     this.formItem.title = data.data.title;
                     this.formItem.outline = data.data.outline;
-                    this.formItem.category = data.data.category;
                     this.markdownEdit.value = data.data.markdownText;
                     this.formItem.content = data.data.content;
                 });
@@ -155,31 +154,7 @@ export default {
                     'markdownText':this.formItem.markdownText,
                     'categoryName':this.formItem.category,
                     'categoryId':this.formItem.category,
-                    'uploadFile':{
-                        'id':this.formItem.uploadId
-                    }
-                }).then(rs => {
-                    console.log(rs);
-                    let data = rs.data
-                    this.formItem.id = data.data.id 
-                });
-            },
-            updateImage(){
-                // 更新之前的校验
-                if(!this.checkForm()){
-                    return;
-                }
-                this.$axios.post('/orangeblog/image/saveImageBlog',{
-                    'id': this.formItem.id,
-                    'title':this.formItem.title,
-                    'outline':this.formItem.outline,
-                    'content':this.formItem.content,
-                    'markdownText':this.formItem.markdownText,
-                    'categoryName':this.formItem.category,
-                    'categoryId':this.formItem.category,
-                    'uploadFile':{
-                        'id':this.formItem.uploadId
-                    }
+                    'imageUrl': this.formItem.imageUrl
                 }).then(rs => {
                     console.log(rs);
                     let data = rs.data
@@ -190,7 +165,8 @@ export default {
                 this.formItem.title = '';
                 this.formItem.outline = '';
                 this.formItem.content = '';
-                this.formItem.category = '';
+                this.formItem.categoryName = '';
+                this.formItem.categoryId = '';
             },
             checkForm(){
                 if(isEmptyOrUndefined(this.formItem.title)){
@@ -205,7 +181,7 @@ export default {
                     this.tipMessage("warning", "请填写概要");
                     return false;
                 }
-                if(isEmptyOrUndefined(this.formItem.uploadId)){
+                if(isEmptyOrUndefined(this.formItem.imageUrl)){
                     this.tipMessage("warning", "请先上传附件");
                     return false;
                 }

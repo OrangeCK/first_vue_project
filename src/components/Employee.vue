@@ -336,9 +336,9 @@ export default {
                     'loginName':this.searchForm.loginName,
                     'userName':this.searchForm.userName,
                 }).then(response => {
-                    var data = response.data;
-                    this.empTable.datas = data.data.records;
-                    this.empTable.page.total = data.data.total;
+                    var data = response.data.data;
+                    this.empTable.datas = data.records;
+                    this.empTable.page.total = data.total;
                     this.empTable.loading = false;
                 });  
             },
