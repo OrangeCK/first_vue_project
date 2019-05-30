@@ -104,7 +104,7 @@ import {setCookie,getCookie,delCookie} from '../js/cookieUtil'
         data(){
             return{
                 activeName:this.$store.state.activeName,
-                loginName:this.global.loginName,
+                loginName:this.$global.loginName,
                 siderShow:true,
                 menusShow:[],
                 contentTabs:{

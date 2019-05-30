@@ -39,7 +39,8 @@
                     </Upload>
                 </FormItem>
                 <FormItem label="正文：">
-                        <mavon-editor ref=md v-model="markdownEdit.value" :toolbars="toolbars" style="height:500px;" @change="changeData" @imgAdd="$imgAdd" />
+                        <mavon-editor ref=md v-model="markdownEdit.value" :toolbars="toolbars" style="min-height:400px;"
+                             @change="changeData" @imgAdd="$imgAdd" @imgDel="$imgDel" :boxShadow="false"/>
                 </FormItem>
             </Form>
         </div>
@@ -64,6 +65,7 @@ export default {
                 markdownEdit:{
                     value: '# 你好'
                 },
+                img_file:{},
                 headers:{},
                 formItem: {
                     id: null,
@@ -121,6 +123,7 @@ export default {
         methods: {
             // markdown中上传图片
             $imgAdd(pos, $file){
+                this.img_file[pos] = $file;
                  // 第一步.将图片上传到服务器.
                 var formdata = new FormData();
                 formdata.append('multipartFile', $file);
@@ -134,6 +137,11 @@ export default {
                     // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
                     this.$refs.md.$img2Url(pos, url);
                 })
+            },
+            // 删除markdown中的图片
+            $imgDel(pos){
+                this.$axios.post('/orangeblog/aliOss/deleteFromOss?key=' + pos[0].name);
+                delete this.img_file[pos]
             },
             uploadSuccess(response){
                 let data = response.data;
@@ -203,8 +211,8 @@ export default {
                     'imageUrl': this.formItem.imageUrl
                 }).then(rs => {
                     console.log(rs);
-                    let data = rs.data
-                    this.formItem.id = data.data.id 
+                    // let data = rs.data
+                    // this.formItem.id = data.data.id 
                 });
             },
             resetImage(){

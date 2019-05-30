@@ -1,7 +1,7 @@
 <template>
   <div class="loginbg">
     <div class="page">
-      <div class="head">LM平台</div>
+      <div class="head">渠道拓展平台</div>
       <div class="singin">SING IN</div>
       <div class="body">
         <ul class="loginForm">
@@ -149,11 +149,12 @@ import {setCookie,getCookie} from '../js/cookieUtil.js'
             loginName:this.loginForm.account,
             password:this.loginForm.password,
           }).then(response => {
+              let data = response.data.data;
             if(response.data.success == true){
-              setCookie('token', response.data.data.Authorization);
-              setCookie('refreshToken', response.data.data.Refresh_Token);
-              this.$store.commit('SET_LoginName', response.data.data.loginName);
-              this.$store.commit('SET_UserId', response.data.data.id);
+              setCookie('token', data.Authorization);
+              setCookie('refreshToken', data.Refresh_Token);
+              this.$store.commit('SET_LoginName', data.loginName);
+              this.$store.commit('SET_UserId', data.id);
               this.$store.commit('SET_BreadCrumbs', '[]');
               this.$store.commit('SET_ActiveName', '');
               this.$router.push({ path: "/" });
@@ -163,7 +164,6 @@ import {setCookie,getCookie} from '../js/cookieUtil.js'
                 duration:5
               });
             }
-            console.log(response);
           });  
       }
     }
