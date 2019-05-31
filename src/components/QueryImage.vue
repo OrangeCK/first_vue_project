@@ -8,6 +8,60 @@
             </div>
         </div>
         <Divider orientation="left"><h4>查询结果</h4></Divider>
+        <Button @click="openAddModel" type="primary">Open</Button>
+            <Drawer  :closable="false" v-model="drawerFlag" style="width:500px;" :width="85" :scrollable="true">
+                <Divider orientation="left"><h4>填写信息</h4></Divider>
+                <div class="content">
+                    <Form :model="formItem" :label-width="80">
+                        <FormItem label="标题：" >
+                            <Input v-model="formItem.title" placeholder="请输入标题..." class="form_inp"></Input>
+                            <Button style="float:right;" type="warning" @click="submitImage" :style="{width:'100px'}">
+                                <span v-if="formItem.id == null || formItem.id == ''">保存草稿</span>
+                                <span v-if="formItem.id != null && formItem.id != ''">更新草稿</span>
+                            </Button>
+                        </FormItem>
+                        <FormItem label="分类：" >
+                            <Select v-model="formItem.categoryId" class="form_inp">
+                                <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            </Select>
+                        </FormItem>
+                        <FormItem label="概要：" >
+                            <Input v-model="formItem.outline" placeholder="请输入内容概要..."></Input>
+                        </FormItem>
+                        <FormItem label="图片：">
+                            <div class="demo-upload-list" v-if="uploadUrl != null && uploadUrl != ''">
+                                <img :src="uploadUrl" >
+                                <div class="demo-upload-list-cover">
+                                    <Icon type="ios-eye-outline" @click.native="handleView()"></Icon>
+                                    <Icon type="ios-trash-outline" @click.native="handleRemove()"></Icon>
+                                </div>
+                            </div>
+                            <Upload
+                                multiple
+                                style="width:15em; display: inline-block;"
+                                :on-success="uploadSuccess"
+                                :on-error="uploadFail"
+                                :on-remove="removeUpload"
+                                :headers="headers"
+                                type="drag"
+                                name="multipartFile"
+                                action="/orangeblog/aliOss/uploadToOss">
+                                <div style="width: 58px;height:58px;line-height: 58px;">
+                                    <Icon type="ios-camera" size="30"></Icon>
+                                </div>
+                            </Upload>
+                    
+                        </FormItem>
+                        <FormItem label="正文：">
+                                <mavon-editor ref=md v-model="markdownEdit.value" :toolbars="toolbars" style="min-height:400px;"
+                                    @change="changeData" @imgAdd="$imgAdd" @imgDel="$imgDel" :boxShadow="false"/>
+                        </FormItem>
+                    </Form>
+                </div>
+            </Drawer>
+        <Modal title="View Image" v-model="visible">
+            <img :src="itemUrl" v-if="visible" style="width: 100%">
+        </Modal>
         <div class="content">
             <Table :loading="imageTable.loading" :columns="imageTable.columns" ref="selection" :data="imageTable.datas" ></Table>
             <div style="margin: 10px 10px 0 10px;overflow: hidden">
@@ -21,6 +75,9 @@
 </template>
 
 <style scoped>
+form .form_inp{
+    width:500px;
+}
 .table table{
     min-width: 1600px;
 }
@@ -50,13 +107,111 @@ div .inp{
     height: 100%;
     overflow:hidden;
 }
-
+/* 上传图片的样式 */
+.demo-upload-list{
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    margin-right: 4px;
+}
+.demo-upload-list img{
+    width: 100%;
+    height: 100%;
+}
+.demo-upload-list-cover{
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.6);
+}
+.demo-upload-list:hover .demo-upload-list-cover{
+    display: block;
+}
+.demo-upload-list-cover i{
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
+}
 </style>
 <script>
+import {setCookie,getCookie,delCookie} from '../js/cookieUtil.js'
 import {isEmptyOrUndefined} from '../js/util'
 export default {
         data () {
             return {
+                uploadUrl:'',
+                defaultList: [
+                    {
+                        'name': 'a42bdcc1178e62b4694c830f028db5c0',
+                        'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
+                    },
+                    {
+                        'name': 'bc7521e033abdd1e92222d733590f104',
+                        'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
+                    }
+                ],
+                imgName: '',
+                visible: false,
+                uploadList: [],
+                markdownEdit:{
+                    value: '# 你好'
+                },
+                img_file:{},
+                headers:{},
+                formItem: {
+                    id: null,
+                    title: '',
+                    outline: '',
+                    content: '',
+                    markdownText:'',
+                    imageUrl: null,
+                    categoryName: '',
+                    categoryId: '',
+                },
+                toolbars:{
+                    bold: true, // 粗体
+                    italic: true, // 斜体
+                    header: true, // 标题
+                    underline: true, // 下划线
+                    strikethrough: true, // 中划线
+                    mark: true, // 标记
+                    superscript: true, // 上角标
+                    subscript: true, // 下角标
+                    quote: true, // 引用
+                    ol: true, // 有序列表
+                    ul: true, // 无序列表
+                    link: true, // 链接
+                    imagelink: true, // 图片链接
+                    code: true, // code
+                    table: true, // 表格
+                    fullscreen: true, // 全屏编辑
+                    readmodel: true, // 沉浸式阅读
+                    htmlcode: true, // 展示html源码
+                    help: true, // 帮助
+                    undo: true, // 上一步
+                    redo: true, // 下一步
+                    trash: false, // 清空
+                    save: false, // 保存（触发events中的save事件）
+                    navigation: true, // 导航目录
+                    alignleft: true, // 左对齐
+                    aligncenter: true, // 居中
+                    alignright: true, // 右对齐
+                    subfield: true, // 单双栏模式
+                    preview: true, // 预览
+                },           
+                drawerFlag: false,
                 isFixed: false,
                 offsetTop:0,
                 offsetWidth:0,
@@ -64,6 +219,20 @@ export default {
                     title:'',
                     category:''
                 },
+                categoryList:[
+                    {
+                        value: 'New York',
+                        label: 'New York'
+                    },
+                    {
+                        value: 'London',
+                        label: 'London'
+                    },
+                    {
+                        value: 'Sydney',
+                        label: 'Sydney'
+                    }
+                ],
                 imageTable:{
                     loading:false,
                     columns:[
@@ -79,11 +248,11 @@ export default {
                             "title":"类别",
                             "key":"categoryName"
                         },
-                        {
-                            "title":"正文",
-                            "key":"content",
-                            tooltip:true
-                        },
+                        // {
+                        //     "title":"正文",
+                        //     "key":"content",
+                        //     tooltip:true
+                        // },
                         {
                             "title":"操作",
                             "key":"",
@@ -101,7 +270,7 @@ export default {
                                         },
                                         on: {
                                             click: () => {
-                                                this.editImage(params.row.id);
+                                                this.editImage(params.row);
                                             }
                                         }
                                     }, 'Edit'),
@@ -136,7 +305,14 @@ export default {
             }
         },
         created(){
-
+            let id = this.$route.params.id;
+            if(!isEmptyOrUndefined(id)){
+                this.getImage(id);
+            }
+            let token = getCookie("token");
+            let refreshToken = getCookie("refreshToken");
+            let jsonStr = '{"Authorization":"'+token+'","Refresh_Token":"'+refreshToken+'"}';
+            this.headers = JSON.parse(jsonStr);
         },
         mounted(){
             window.addEventListener('scroll', this.handleScroll);
@@ -159,6 +335,14 @@ export default {
                 this.imageTable.page.pageSize = pageSize;
                 this.searchImage(1);
             },
+            handleView (name) {
+                this.imgName = name;
+                this.visible = true;
+            },
+            handleRemove (file) {
+                const fileList = this.$refs.upload.fileList;
+                this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            },
             searchImage(page){
                 this.imageTable.loading = true;
                 this.$axios.post('/orangeblog/image/imageBlogPageList',{
@@ -173,13 +357,20 @@ export default {
                     this.imageTable.loading = false;
                 });  
             },
-            editImage(id){
-                this.$router.push({
-                    name: 'UploadFile',
-                    params: {
-                        id: id
-                    }
-                });
+            openAddModel(){
+                this.resetImage();
+                this.drawerFlag = true;
+            },
+            editImage(row){
+                this.resetImage();
+                this.drawerFlag = true;
+                this.formItem.id = row.id;
+                this.markdownEdit.value = row.markdownText;
+                this.formItem.imageUrl = row.imageUrl;
+                this.formItem.title = row.title;
+                this.formItem.outline = row.outline;
+                this.formItem.categoryName = row.categoryName;
+                this.formItem.categoryId = row.categoryId;
             },
             disableImage(id){
                 if(isEmptyOrUndefined(id)){
@@ -201,6 +392,102 @@ export default {
                         }
                     });
                 }
+            },
+            // markdown中上传图片
+            $imgAdd(pos, $file){
+                this.img_file[pos] = $file;
+                 // 第一步.将图片上传到服务器.
+                var formdata = new FormData();
+                formdata.append('multipartFile', $file);
+                this.$axios({
+                    url: '/orangeblog/aliOss/uploadToOss',
+                    method: 'post',
+                    data: formdata,
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                }).then(response => {
+                    var url = response.data.data;
+                    // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+                    this.$refs.md.$img2Url(pos, url);
+                })
+            },
+            // 删除markdown中的图片
+            $imgDel(pos){
+                this.$axios.post('/orangeblog/aliOss/deleteFromOss?key=' + pos[0].name);
+                delete this.img_file[pos]
+            },
+            uploadSuccess(response){
+                let data = response.data;
+                if(response.success == true){
+                    this.formItem.imageUrl = data;
+                }
+            },
+            uploadFail(error){
+                this.tipMessage("error", "上传失败");
+            },
+            removeUpload(response, file){
+                let data = response.response.data;
+                this.$axios.post('/upload/deleteUploadImg?id=' + data.id).then(rs => {
+                    this.formItem.imageUrl = null;
+                    this.tipMessage("info", "删除成功");
+                });  
+            },
+            changeData(value, render) {
+                this.formItem.content = render;
+                this.formItem.markdownText = value;
+            },
+            submitImage(){
+                // 提交之前的校验
+                if(!this.checkForm()){
+                    return;
+                }
+                this.$axios.post('/orangeblog/image/saveImageBlog',{
+                    'id':this.formItem.id,
+                    'title':this.formItem.title,
+                    'outline':this.formItem.outline,
+                    'content':this.formItem.content,
+                    'markdownText':this.formItem.markdownText,
+                    'categoryName':this.formItem.category,
+                    'categoryId':this.formItem.category,
+                    'imageUrl': this.formItem.imageUrl
+                }).then(rs => {
+                    console.log(rs);
+                    // let data = rs.data
+                    // this.formItem.id = data.data.id 
+                });
+            },
+            resetImage(){
+                this.formItem.id = null;
+                this.formItem.markdownText = '';
+                this.formItem.imageUrl = '';
+                this.formItem.title = '';
+                this.formItem.outline = '';
+                this.formItem.content = '';
+                this.formItem.categoryName = '';
+                this.formItem.categoryId = '';
+                this.markdownEdit.value  = '';
+            },
+            checkForm(){
+                if(isEmptyOrUndefined(this.formItem.title)){
+                    this.tipMessage("warning", "标题不能为空");
+                    return false;
+                }
+                if(isEmptyOrUndefined(this.formItem.category)){
+                    this.tipMessage("warning", "请选择分类");
+                    return false;
+                }
+                if(isEmptyOrUndefined(this.formItem.outline)){
+                    this.tipMessage("warning", "请填写概要");
+                    return false;
+                }
+                if(isEmptyOrUndefined(this.formItem.imageUrl)){
+                    this.tipMessage("warning", "请先上传附件");
+                    return false;
+                }
+                if(isEmptyOrUndefined(this.formItem.content)){
+                    this.tipMessage("warning", "请填写正文");
+                    return false;
+                }
+                return true;
             }
         }
     }
