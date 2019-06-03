@@ -5,10 +5,10 @@
                 <Input  placeholder="请输入标题..." v-model="searchForm.title" clearable class="inp"/>
                 <Input  placeholder="请输入类别..." v-model="searchForm.category" clearable class="inp"/>
                 <Button type="warning" custom-icon="iconfont icon-sousuo" @click="searchImage(1)">Search</Button>
+                <Button type="warning" custom-icon="iconfont icon-jiajianzujianjiahao" @click="openAddModel">Add</Button>
             </div>
         </div>
         <Divider orientation="left"><h4>查询结果</h4></Divider>
-        <Button @click="openAddModel" type="primary">Open</Button>
             <Drawer  :closable="false" v-model="drawerFlag" style="width:500px;" :width="85" :scrollable="true">
                 <Divider orientation="left"><h4>填写信息</h4></Divider>
                 <div class="content">
@@ -29,16 +29,17 @@
                             <Input v-model="formItem.outline" placeholder="请输入内容概要..."></Input>
                         </FormItem>
                         <FormItem label="图片：">
-                            <div class="demo-upload-list" v-if="uploadUrl != null && uploadUrl != ''">
-                                <img :src="uploadUrl" >
+                            <div class="demo-upload-list" v-if="formItem.imageUrl != null && formItem.imageUrl != ''">
+                                <img :src="formItem.imageUrl" >
                                 <div class="demo-upload-list-cover">
                                     <Icon type="ios-eye-outline" @click.native="handleView()"></Icon>
                                     <Icon type="ios-trash-outline" @click.native="handleRemove()"></Icon>
                                 </div>
                             </div>
                             <Upload
-                                multiple
-                                style="width:15em; display: inline-block;"
+                                :show-upload-list="showUploadList"
+                                :format="['jpg','jpeg','png']"
+                                style="width:7em; display: inline-block;"
                                 :on-success="uploadSuccess"
                                 :on-error="uploadFail"
                                 :on-remove="removeUpload"
@@ -46,7 +47,7 @@
                                 type="drag"
                                 name="multipartFile"
                                 action="/orangeblog/aliOss/uploadToOss">
-                                <div style="width: 58px;height:58px;line-height: 58px;">
+                                <div style="height:58px;line-height: 58px; ">
                                     <Icon type="ios-camera" size="30"></Icon>
                                 </div>
                             </Upload>
@@ -151,20 +152,9 @@ import {isEmptyOrUndefined} from '../js/util'
 export default {
         data () {
             return {
-                uploadUrl:'',
-                defaultList: [
-                    {
-                        'name': 'a42bdcc1178e62b4694c830f028db5c0',
-                        'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-                    },
-                    {
-                        'name': 'bc7521e033abdd1e92222d733590f104',
-                        'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-                    }
-                ],
-                imgName: '',
+                itemUrl:'',
+                showUploadList: true,
                 visible: false,
-                uploadList: [],
                 markdownEdit:{
                     value: '# 你好'
                 },
@@ -335,13 +325,12 @@ export default {
                 this.imageTable.page.pageSize = pageSize;
                 this.searchImage(1);
             },
-            handleView (name) {
-                this.imgName = name;
+            handleView () {
+                this.itemUrl = this.formItem.imageUrl;
                 this.visible = true;
             },
-            handleRemove (file) {
-                const fileList = this.$refs.upload.fileList;
-                this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            handleRemove () {
+                this.uploadUrl = '';
             },
             searchImage(page){
                 this.imageTable.loading = true;
@@ -419,6 +408,7 @@ export default {
                 let data = response.data;
                 if(response.success == true){
                     this.formItem.imageUrl = data;
+                    this.showUploadList  = false;
                 }
             },
             uploadFail(error){
@@ -440,14 +430,21 @@ export default {
                 if(!this.checkForm()){
                     return;
                 }
+                // 遍历数组
+                for(let i = 0; i < this.categoryList.length ; i++){
+                    if(this.formItem.categoryId == this.categoryList[i].value){
+                        this.formItem.categoryName = this.categoryList[i].label;
+                        break;
+                    }
+                }
                 this.$axios.post('/orangeblog/image/saveImageBlog',{
                     'id':this.formItem.id,
                     'title':this.formItem.title,
                     'outline':this.formItem.outline,
                     'content':this.formItem.content,
                     'markdownText':this.formItem.markdownText,
-                    'categoryName':this.formItem.category,
-                    'categoryId':this.formItem.category,
+                    'categoryName':this.formItem.categoryName,
+                    'categoryId':this.formItem.categoryId,
                     'imageUrl': this.formItem.imageUrl
                 }).then(rs => {
                     console.log(rs);
@@ -471,7 +468,7 @@ export default {
                     this.tipMessage("warning", "标题不能为空");
                     return false;
                 }
-                if(isEmptyOrUndefined(this.formItem.category)){
+                if(isEmptyOrUndefined(this.formItem.categoryId)){
                     this.tipMessage("warning", "请选择分类");
                     return false;
                 }

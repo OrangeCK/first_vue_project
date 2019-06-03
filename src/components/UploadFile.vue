@@ -24,7 +24,6 @@
                 </FormItem>
                 <FormItem label="图片：">
                     <Upload
-                        multiple
                         :on-success="uploadSuccess"
                         :on-error="uploadFail"
                         :on-remove="removeUpload"

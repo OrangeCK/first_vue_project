@@ -78,6 +78,11 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
  })
 
  router.beforeEach((to, from, next) => {
+  iView.LoadingBar.config({
+    color: '#5cb85c',
+    failedColor: '#f0ad4e',
+  });
+  iView.LoadingBar.start();
   if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
     let loginFlag = false;
     let token = getCookie("token");
@@ -85,7 +90,6 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
     if (token) {  
       axios.get('/login/judgeLogin')
       .then(res =>{
-        console.log(res);
         let data = res.data;
         if(data.success){
           next();
@@ -95,6 +99,10 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
             query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
           });
         }
+      }).catch(function (error) {
+          next({
+            path: '/Login'
+          });
       });
     }else {
       next({
@@ -107,6 +115,10 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
       next();
   }
 })
+
+router.afterEach(route => {
+  iView.LoadingBar.finish();
+});
 
 /* eslint-disable no-new */
 new Vue({
