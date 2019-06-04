@@ -250,8 +250,13 @@ export default {
                             "key":"userPhone"
                         },
                         {
+                            "title":"角色",
+                            "key":"roleName"
+                        },
+                        {
                             "title":"操作",
                             "key":"",
+                            width:170,
                             render:(h, params) => {
                                 return h('div',[
                                     h('Button', {
@@ -338,9 +343,33 @@ export default {
                 }).then(response => {
                     var data = response.data.data;
                     this.empTable.datas = data.records;
+                    for(let i = 0; i < this.empTable.datas.length; i++){
+                        this.empTable.datas[i]["roleName"] = this.empTable.datas[i].rolePoList[0].roleName;
+                    }
                     this.empTable.page.total = data.total;
                     this.empTable.loading = false;
                 });  
+            },
+            // 全局loading开启
+            handleSpinShow() {
+                this.$Spin.show({
+                    render: (h) => {
+                        return h('div', [
+                            h('Icon', {
+                                'class': 'demo-spin-icon-load',
+                                props: {
+                                    custom: 'iconfont icon-load-a-copy',
+                                    size: 20
+                                }
+                            }),
+                            h('div', 'Loading')
+                        ])
+                    }
+                });
+            },
+            // 全局loading关闭
+            handleSpinHide() {
+                this.$Spin.hide();
             },
             tipMessage(type,msg){
                 switch(type){
@@ -415,7 +444,7 @@ export default {
                 this.addModal.form.sex = params.row.sex;
                 this.addModal.form.password = params.row.password;
                 this.addModal.form.jobNumber = params.row.jobNumber;
-                this.addModal.form.role = params.row.jobNumber;
+                this.addModal.form.role = params.row.rolePoList[0].id.toString();
             },
             submitEmployee(name){
                  this.$refs[name].validate((valid) => {
@@ -458,7 +487,9 @@ export default {
                     title: "警告",
                     content: '<p>确定要删除用户吗？</p>',
                     onOk: () => {
+                        this.handleSpinShow();
                         this.$axios.post("/orangeblog/employee/disableEmployee?id="+id).then(response => {
+                            this.handleSpinHide();
                             let data = response.data;
                             if(data.success == true){
                                 this.tipMessage("info","操作成功");

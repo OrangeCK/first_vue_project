@@ -153,7 +153,7 @@ import {setCookie,getCookie} from '../js/cookieUtil.js'
             if(response.data.success == true){
               setCookie('token', data.Authorization);
               setCookie('refreshToken', data.Refresh_Token);
-              this.$store.commit('SET_LoginName', data.loginName);
+              this.$store.commit('SET_LoginName', data.userName);
               this.$store.commit('SET_UserId', data.id);
               this.$store.commit('SET_BreadCrumbs', '[]');
               this.$store.commit('SET_ActiveName', '');

@@ -3,15 +3,17 @@
         <div class="min_tools">
             <div class="tools" ref="tools" :class="{'is_fixed' : isFixed}">
                 <Input  placeholder="请输入标题..." v-model="searchForm.title" clearable class="inp"/>
-                <Input  placeholder="请输入类别..." v-model="searchForm.category" clearable class="inp"/>
+                <Select placeholder="请输入类别..." v-model="searchForm.category" clearable filterable class="inp">
+                    <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
                 <Button type="warning" custom-icon="iconfont icon-sousuo" @click="searchImage(1)">Search</Button>
                 <Button type="warning" custom-icon="iconfont icon-jiajianzujianjiahao" @click="openAddModel">Add</Button>
             </div>
         </div>
         <Divider orientation="left"><h4>查询结果</h4></Divider>
-            <Drawer  :closable="false" v-model="drawerFlag" style="width:500px;" :width="85" :scrollable="true">
+            <Drawer  :closable="false" v-model="drawerFlag" :width="85" > 
                 <Divider orientation="left"><h4>填写信息</h4></Divider>
-                <div class="content">
+                <div>
                     <Form :model="formItem" :label-width="80">
                         <FormItem label="标题：" >
                             <Input v-model="formItem.title" placeholder="请输入标题..." class="form_inp"></Input>
@@ -54,7 +56,7 @@
                     
                         </FormItem>
                         <FormItem label="正文：">
-                                <mavon-editor ref=md v-model="markdownEdit.value" :toolbars="toolbars" style="min-height:400px;"
+                                <mavon-editor ref=md v-model="markdownEdit.value" :toolbars="toolbars" style="min-height:400px;" :ishljs="false"
                                     @change="changeData" @imgAdd="$imgAdd" @imgDel="$imgDel" :boxShadow="false"/>
                         </FormItem>
                     </Form>
@@ -232,20 +234,28 @@ export default {
                         },
                         {
                             "title":"概要",
-                            "key":"outline"
+                            "key":"outline",
+                            tooltip:true
                         },
                         {
                             "title":"类别",
-                            "key":"categoryName"
+                            "key":"categoryName",
+                            width:100
                         },
-                        // {
-                        //     "title":"正文",
-                        //     "key":"content",
-                        //     tooltip:true
-                        // },
+                        {
+                            "title":"图片",
+                            "key":"imageUrl",
+                            tooltip:true
+                        },
+                        {
+                            "title":"状态",
+                            "key":"statusName",
+                            width:80
+                        },
                         {
                             "title":"操作",
                             "key":"",
+                            width:260,
                             render:(h, params) => {
                                 return h('div',[
                                     h('Button', {
@@ -279,7 +289,23 @@ export default {
                                                 this.disableImage(params.row.id);
                                             }
                                         }
-                                    }, 'Disa')   
+                                    }, 'Disa'),
+                                    h('Button', {
+                                        props: {
+                                            type: 'warning',
+                                            size: 'default',
+                                            ghost: true,
+                                            'custom-icon': 'iconfont icon-fenxiang'
+                                        },
+                                        style: {
+                                            padding: '5px 10px 5px 10px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.updateImageBlog(params.row.id);
+                                            }
+                                        }
+                                    }, 'Share')   
                                 ])
                             }
                         }
@@ -295,10 +321,7 @@ export default {
             }
         },
         created(){
-            let id = this.$route.params.id;
-            if(!isEmptyOrUndefined(id)){
-                this.getImage(id);
-            }
+            this.searchImage(1);
             let token = getCookie("token");
             let refreshToken = getCookie("refreshToken");
             let jsonStr = '{"Authorization":"'+token+'","Refresh_Token":"'+refreshToken+'"}';
@@ -334,11 +357,9 @@ export default {
             },
             searchImage(page){
                 this.imageTable.loading = true;
-                this.$axios.post('/orangeblog/image/imageBlogPageList',{
+                this.$axios.post('/orangeblog/image/imageBlogPageList?pageIndex=' + page + '&pageSize=' + this.imageTable.page.pageSize,{
                     'title':this.searchForm.title,
-                    'categoryName':this.searchForm.category,
-                    'page':page,
-                    'rows':this.imageTable.page.pageSize
+                    'categoryId':this.searchForm.category,
                 }).then(response => {
                     var data = response.data.data;
                     this.imageTable.datas = data.records;
@@ -369,6 +390,7 @@ export default {
                         title: "警告",
                         content: '<p>确定要删除数据吗？</p>',
                         onOk: () => {
+                            this.handleSpinShow();
                             this.$axios.post("/orangeblog/image/deleteImageBlog?id="+id).then(response => {
                                 let data = response.data;
                                 if(data.success == true){
@@ -377,10 +399,55 @@ export default {
                                 }else{
                                     this.tipMessage("error",data.msg);
                                 }
+                                this.handleSpinHide();
                             });    
                         }
                     });
                 }
+            },
+            updateImageBlog(id){
+                if(isEmptyOrUndefined(id)){
+                    this.tipMessage("warning", "id不存在");
+                }else{
+                    this.$Modal.confirm({
+                        title: "警告",
+                        content: '<p>确定是否提交数据？提交的数据会立即生效。</p>',
+                        onOk: () => {
+                            this.handleSpinShow();
+                            this.$axios.post("/orangeblog/image/updateImageBlogStatus?id="+id).then(response => {
+                                let data = response.data;
+                                if(data.success == true){
+                                    this.tipMessage("info","提交成功");
+                                    this.searchImage(1);
+                                }else{
+                                    this.tipMessage("error",data.msg);
+                                }
+                                this.handleSpinHide();
+                            });    
+                        }
+                    });
+                }
+            },
+            // 全局loading开启
+            handleSpinShow () {
+                this.$Spin.show({
+                    render: (h) => {
+                        return h('div', [
+                            h('Icon', {
+                                'class': 'demo-spin-icon-load',
+                                props: {
+                                    custom: 'iconfont icon-load-a-copy',
+                                    size: 20
+                                }
+                            }),
+                            h('div', 'Loading')
+                        ])
+                    }
+                });
+            },
+            // 全局loading关闭
+            handleSpinHide () {
+                this.$Spin.hide();
             },
             // markdown中上传图片
             $imgAdd(pos, $file){
@@ -388,15 +455,22 @@ export default {
                  // 第一步.将图片上传到服务器.
                 var formdata = new FormData();
                 formdata.append('multipartFile', $file);
+                this.handleSpinShow();
                 this.$axios({
                     url: '/orangeblog/aliOss/uploadToOss',
                     method: 'post',
                     data: formdata,
                     headers: { 'Content-Type': 'multipart/form-data' },
                 }).then(response => {
-                    var url = response.data.data;
-                    // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-                    this.$refs.md.$img2Url(pos, url);
+                    let data = response.data;
+                    if(data.success == true){
+                        var url = data.data;
+                        // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+                        this.$refs.md.$img2Url(pos, url);
+                    }else{
+                        this.tipMessage("error",data.msg);
+                    }
+                    this.handleSpinHide();
                 })
             },
             // 删除markdown中的图片
@@ -437,6 +511,7 @@ export default {
                         break;
                     }
                 }
+                this.handleSpinShow();
                 this.$axios.post('/orangeblog/image/saveImageBlog',{
                     'id':this.formItem.id,
                     'title':this.formItem.title,
@@ -446,10 +521,16 @@ export default {
                     'categoryName':this.formItem.categoryName,
                     'categoryId':this.formItem.categoryId,
                     'imageUrl': this.formItem.imageUrl
-                }).then(rs => {
-                    console.log(rs);
-                    // let data = rs.data
-                    // this.formItem.id = data.data.id 
+                }).then(res => {
+                    this.drawerFlag = false;
+                    this.handleSpinHide();
+                    let data = res.data;
+                    if(data.success == true){
+                        this.tipMessage("info","保存成功");
+                        this.searchImage(1);
+                    }else{
+                        this.tipMessage("error",data.msg);
+                    }
                 });
             },
             resetImage(){
