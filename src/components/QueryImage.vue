@@ -23,9 +23,7 @@
                             </Button>
                         </FormItem>
                         <FormItem label="分类：" >
-                            <Select v-model="formItem.categoryId" class="form_inp">
-                                <Option v-for="item in categoryList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                            </Select>
+                            <Cascader :data="cascaderList" v-model="categorys" class="form_inp"></Cascader>
                         </FormItem>
                         <FormItem label="概要：" >
                             <Input v-model="formItem.outline" placeholder="请输入内容概要..."></Input>
@@ -171,6 +169,8 @@ export default {
                     imageUrl: null,
                     categoryName: '',
                     categoryId: '',
+                    parentCategoryName: '',
+                    parentCategoryId: ''
                 },
                 toolbars:{
                     bold: true, // 粗体
@@ -223,6 +223,60 @@ export default {
                     {
                         value: 'Sydney',
                         label: 'Sydney'
+                    }
+                ],
+                categorys:[],
+                cascaderList:[{
+                    value: '1',
+                    label: '北京',
+                    children: [
+                            {
+                                value: 'London',
+                                label: 'London'
+                            },
+                            {
+                                value: 'New York',
+                                label: 'New York'
+                            },
+                            {
+                                value: 'Sydney',
+                                label: 'Sydney'
+                            }
+                        ]
+                    },{
+                    value: '12',
+                    label: '江苏',
+                    children: [
+                            {
+                                value: 'London',
+                                label: 'London'
+                            },
+                            {
+                                value: 'New York',
+                                label: 'New York'
+                            },
+                            {
+                                value: 'Sydney',
+                                label: 'Sydney'
+                            }
+                        ]
+                    },{
+                    value: '13',
+                    label: '栗子小厨',
+                    children: [
+                            {
+                                value: 'London',
+                                label: 'London'
+                            },
+                            {
+                                value: 'New York',
+                                label: 'New York'
+                            },
+                            {
+                                value: 'Sydney',
+                                label: 'Sydney'
+                            }
+                        ]
                     }
                 ],
                 imageTable:{
@@ -381,6 +435,10 @@ export default {
                 this.formItem.outline = row.outline;
                 this.formItem.categoryName = row.categoryName;
                 this.formItem.categoryId = row.categoryId;
+                this.formItem.parentCategoryId = row.parentCategoryId;
+                this.formItem.parentCategoryName = row.parentCategoryName;
+                this.categorys.push(row.parentCategoryId);
+                this.categorys.push(row.categoryId);
             },
             disableImage(id){
                 if(isEmptyOrUndefined(id)){
@@ -504,10 +562,18 @@ export default {
                 if(!this.checkForm()){
                     return;
                 }
-                // 遍历数组
-                for(let i = 0; i < this.categoryList.length ; i++){
-                    if(this.formItem.categoryId == this.categoryList[i].value){
-                        this.formItem.categoryName = this.categoryList[i].label;
+                this.formItem.parentCategoryId = this.categorys[0];
+                this.formItem.categoryId = this.categorys[1];
+                 // 遍历数组
+                for(let i = 0; i < this.cascaderList.length ; i++){
+                    if(this.formItem.parentCategoryId == this.cascaderList[i].value){
+                        this.formItem.parentCategoryName = this.cascaderList[i].label;
+                        for(let j = 0; this.cascaderList[i].children.length; j++){
+                            if(this.formItem.categoryId == this.cascaderList[i].children[j].value){
+                                this.formItem.categoryName = this.cascaderList[i].children[j].label;
+                                break
+                            }
+                        }
                         break;
                     }
                 }
@@ -520,6 +586,8 @@ export default {
                     'markdownText':this.formItem.markdownText,
                     'categoryName':this.formItem.categoryName,
                     'categoryId':this.formItem.categoryId,
+                    'parentCategoryName':this.formItem.parentCategoryName,
+                    'parentCategoryId':this.formItem.parentCategoryId,
                     'imageUrl': this.formItem.imageUrl
                 }).then(res => {
                     this.drawerFlag = false;
@@ -543,16 +611,22 @@ export default {
                 this.formItem.categoryName = '';
                 this.formItem.categoryId = '';
                 this.markdownEdit.value  = '';
+                this.formItem.parentCategoryId = '';
+                this.formItem.parentCategoryName = '';
+                this.categorys = [];
             },
             checkForm(){
                 if(isEmptyOrUndefined(this.formItem.title)){
                     this.tipMessage("warning", "标题不能为空");
                     return false;
                 }
-                if(isEmptyOrUndefined(this.formItem.categoryId)){
+                if(this.categorys.length < 1){
                     this.tipMessage("warning", "请选择分类");
                     return false;
                 }
+                // if(isEmptyOrUndefined(this.formItem.categoryId)){
+                    
+                // }
                 if(isEmptyOrUndefined(this.formItem.outline)){
                     this.tipMessage("warning", "请填写概要");
                     return false;

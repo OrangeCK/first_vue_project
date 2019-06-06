@@ -4,9 +4,6 @@
             <div class="tools" ref="tools" :class="{'is_fixed' : isFixed}">
                 <Input  placeholder="请输入登录名..." v-model="searchForm.loginName" clearable class="inp"/>
                 <Input  placeholder="请输入用户名..." v-model="searchForm.userName" clearable class="inp"/>
-                <Select :style="{width: '200px'}">
-                    <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
                 <Button type="warning" custom-icon="iconfont icon-sousuo" @click="searchEmployee(1)">Search</Button>
                 <Button type="warning" custom-icon="iconfont icon-jiajianzujianjiahao" @click="addEmployee">Add</Button>
             </div>
