@@ -2,7 +2,7 @@
   "name": "first_vue_project",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "陈康 <kangchen@sf-express.com>",
+  "author": "ck",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
