@@ -46,7 +46,7 @@
                                 :headers="headers"
                                 type="drag"
                                 name="multipartFile"
-                                action="/orangeblog/aliOss/uploadToOss">
+                                action="http://127.0.0.1:8888/orangeblog/aliOss/uploadToOss">
                                 <div style="height:58px;line-height: 58px; ">
                                     <Icon type="ios-camera" size="30"></Icon>
                                 </div>
@@ -411,9 +411,13 @@ export default {
             },
             searchImage(page){
                 this.imageTable.loading = true;
-                this.$axios.post('/orangeblog/image/imageBlogPageList?pageIndex=' + page + '&pageSize=' + this.imageTable.page.pageSize,{
-                    'title':this.searchForm.title,
-                    'categoryId':this.searchForm.category,
+                this.service({
+                    url: 'http://127.0.0.1:8888/orangeblog/image/imageBlogPageList?pageIndex=' + page + '&pageSize=' + this.imageTable.page.pageSize,
+                    data: {
+                        'title':this.searchForm.title,
+                        'categoryId':this.searchForm.category
+                    },
+                    method: "post"
                 }).then(response => {
                     var data = response.data.data;
                     this.imageTable.datas = data.records;
@@ -449,7 +453,10 @@ export default {
                         content: '<p>确定要删除数据吗？</p>',
                         onOk: () => {
                             this.handleSpinShow();
-                            this.$axios.post("/orangeblog/image/deleteImageBlog?id="+id).then(response => {
+                            this.service({
+                                url: "http://127.0.0.1:8888/orangeblog/image/deleteImageBlog?id="+id,
+                                method: "post"
+                            }).then(response => {
                                 let data = response.data;
                                 if(data.success == true){
                                     this.tipMessage("info","操作成功");
@@ -472,7 +479,10 @@ export default {
                         content: '<p>确定是否提交数据？提交的数据会立即生效。</p>',
                         onOk: () => {
                             this.handleSpinShow();
-                            this.$axios.post("/orangeblog/image/updateImageBlogStatus?id="+id).then(response => {
+                            this.service({
+                                url: "http://127.0.0.1:8888/orangeblog/image/updateImageBlogStatus?id="+id,
+                                method: "post"
+                            }).then(response => {
                                 let data = response.data;
                                 if(data.success == true){
                                     this.tipMessage("info","提交成功");
@@ -514,11 +524,11 @@ export default {
                 var formdata = new FormData();
                 formdata.append('multipartFile', $file);
                 this.handleSpinShow();
-                this.$axios({
-                    url: '/orangeblog/aliOss/uploadToOss',
-                    method: 'post',
+                this.service({
+                    url: "http://127.0.0.1:8888/orangeblog/aliOss/uploadToOss",
                     data: formdata,
                     headers: { 'Content-Type': 'multipart/form-data' },
+                    method: "post"
                 }).then(response => {
                     let data = response.data;
                     if(data.success == true){
@@ -533,7 +543,10 @@ export default {
             },
             // 删除markdown中的图片
             $imgDel(pos){
-                this.$axios.post('/orangeblog/aliOss/deleteFromOss?key=' + pos[0].name);
+                this.service({
+                    url: 'http://127.0.0.1:8888/orangeblog/aliOss/deleteFromOss?key=' + pos[0].name,
+                    method: "post"
+                })
                 delete this.img_file[pos]
             },
             uploadSuccess(response){
@@ -548,7 +561,7 @@ export default {
             },
             removeUpload(response, file){
                 let data = response.response.data;
-                this.$axios.post('/upload/deleteUploadImg?id=' + data.id).then(rs => {
+                this.$axios.post('http://127.0.0.1:8888/upload/deleteUploadImg?id=' + data.id).then(rs => {
                     this.formItem.imageUrl = null;
                     this.tipMessage("info", "删除成功");
                 });  
@@ -578,17 +591,21 @@ export default {
                     }
                 }
                 this.handleSpinShow();
-                this.$axios.post('/orangeblog/image/saveImageBlog',{
-                    'id':this.formItem.id,
-                    'title':this.formItem.title,
-                    'outline':this.formItem.outline,
-                    'content':this.formItem.content,
-                    'markdownText':this.formItem.markdownText,
-                    'categoryName':this.formItem.categoryName,
-                    'categoryId':this.formItem.categoryId,
-                    'parentCategoryName':this.formItem.parentCategoryName,
-                    'parentCategoryId':this.formItem.parentCategoryId,
-                    'imageUrl': this.formItem.imageUrl
+                this.service({
+                    url: "http://127.0.0.1:8888/orangeblog/image/saveImageBlog",
+                    data: {
+                        'id':this.formItem.id,
+                        'title':this.formItem.title,
+                        'outline':this.formItem.outline,
+                        'content':this.formItem.content,
+                        'markdownText':this.formItem.markdownText,
+                        'categoryName':this.formItem.categoryName,
+                        'categoryId':this.formItem.categoryId,
+                        'parentCategoryName':this.formItem.parentCategoryName,
+                        'parentCategoryId':this.formItem.parentCategoryId,
+                        'imageUrl': this.formItem.imageUrl
+                    },
+                    method: "post"
                 }).then(res => {
                     this.drawerFlag = false;
                     this.handleSpinHide();

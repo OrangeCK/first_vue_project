@@ -18,9 +18,8 @@ Vue.use(mavonEditor);
 import axios from 'axios'
 import {setCookie,getCookie,delCookie} from './js/cookieUtil.js'
 import ivueCommon from './js/ivueCommon'
-axios.defaults.withcredentials = true;
+axios.defaults.withCredentials = true;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-axios.defaults.withcredentials = true;
 axios.defaults.timeout = 150000;
 Vue.prototype.$axios = axios;
 Vue.prototype.$global = global;
@@ -28,25 +27,28 @@ Vue.config.productionTip = false
 
 Vue.use(ivueCommon);
 
+const service = axios.create({
+  withCredentials: true,
+})
+
 // http request 拦截器
-axios.interceptors.request.use(
+service.interceptors.request.use(
   config => {
-      // console.log("正在请求", config);
-      let token = getCookie("token");
-      let refreshToken = getCookie("refreshToken");
-      if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-          // console.log("token是多少：",token);
-          config.headers.Authorization = token;
-          config.headers.Refresh_Token = refreshToken;
-      }
-      return config;
+    // console.log("正在请求", config);
+    let token = getCookie("token");
+    let refreshToken = getCookie("refreshToken");
+    if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+        config.headers.Authorization = token;
+        config.headers.Refresh_Token = refreshToken;
+    }
+    return config;
   },
   error => {
       return Promise.reject(error);
   });
 
 // http response拦截器
-axios.interceptors.response.use(data => {// 响应成功关闭loading
+service.interceptors.response.use(data => {// 响应成功关闭loading
   // console.log("成功响应",data);
   let token = data.headers.authorization;
   if(token){
@@ -77,6 +79,8 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
   return Promise.reject(error)
  })
 
+Vue.prototype.service = service;
+
  router.beforeEach((to, from, next) => {
   iView.LoadingBar.config({
     color: '#5cb85c',
@@ -87,9 +91,11 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
     let loginFlag = false;
     let token = getCookie("token");
     // 通过vuex state获取当前的token是否存在
-    if (token) {  
-      axios.get('/login/judgeLogin')
-      .then(res =>{
+    if (token) {
+      service({
+        url: "http://127.0.0.1:8888/login/judgeLogin",
+        method: "get"
+      }).then(res =>{
         let data = res.data;
         if(data.success){
           next();

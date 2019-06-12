@@ -334,9 +334,13 @@ export default {
             },
             searchEmployee(page){
                 this.empTable.loading = true;
-                this.$axios.post('/orangeblog/employee/employeePageList?pageIndex=' + page + '&pageSize=' + this.empTable.page.pageSize,{
-                    'loginName':this.searchForm.loginName,
-                    'userName':this.searchForm.userName,
+                this.service({
+                    url: 'http://127.0.0.1:8888/orangeblog/employee/employeePageList?pageIndex=' + page + '&pageSize=' + this.empTable.page.pageSize,
+                    data: {
+                        'loginName':this.searchForm.loginName,
+                        'userName':this.searchForm.userName,
+                    },
+                    method: "post"
                 }).then(response => {
                     var data = response.data.data;
                     this.empTable.datas = data.records;
@@ -448,18 +452,22 @@ export default {
                     if (valid) {
                         this.addModal.closable = false;
                         this.addModal.loading = true;
-                        let url = "/orangeblog/employee/saveEmployee";
-                        this.$axios.post(url,{
-                            'id':this.addModal.form.id,
-                            'loginName':this.addModal.form.loginName,
-                            'userName':this.addModal.form.userName,
-                            'userPhone':this.addModal.form.phone,
-                            'age':this.addModal.form.age,
-                            'sex':this.addModal.form.sex,
-                            'password':this.addModal.form.password,
-                            'rolePoList':[{
-                                'id':this.addModal.form.role
-                            }]
+                        let url = "http://127.0.0.1:8888/orangeblog/employee/saveEmployee";
+                        this.service({
+                            url: url,
+                            data: {
+                                'id':this.addModal.form.id,
+                                'loginName':this.addModal.form.loginName,
+                                'userName':this.addModal.form.userName,
+                                'userPhone':this.addModal.form.phone,
+                                'age':this.addModal.form.age,
+                                'sex':this.addModal.form.sex,
+                                'password':this.addModal.form.password,
+                                'rolePoList':[{
+                                    'id':this.addModal.form.role
+                                }]
+                            },
+                            method: "post"
                         }).then(response => {
                             let data = response.data;
                             if(data.success == true){
@@ -485,7 +493,10 @@ export default {
                     content: '<p>确定要删除用户吗？</p>',
                     onOk: () => {
                         this.handleSpinShow();
-                        this.$axios.post("/orangeblog/employee/disableEmployee?id="+id).then(response => {
+                        this.service({
+                            url: "http://127.0.0.1:8888/orangeblog/employee/disableEmployee?id="+id,
+                            method: "post"
+                        }).then(response => {
                             this.handleSpinHide();
                             let data = response.data;
                             if(data.success == true){

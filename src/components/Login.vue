@@ -145,10 +145,14 @@ import {setCookie,getCookie} from '../js/cookieUtil.js'
     },
     methods: {
       loginAction(){
-        this.$axios.post('/login/goLogin',{
+        this.service({
+          url: "http://127.0.0.1:8888/login/goLogin",
+          data: {
             loginName:this.loginForm.account,
             password:this.loginForm.password,
-          }).then(response => {
+          },
+          method: "post"
+        }).then(response => {
               let data = response.data.data;
             if(response.data.success == true){
               setCookie('token', data.Authorization);
