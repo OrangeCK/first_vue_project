@@ -132,7 +132,10 @@ import {setCookie,getCookie,delCookie} from '../js/cookieUtil'
                     title: "警告",
                     content: '<p>确定要退出登录吗？</p>',
                     onOk: () => {
-                        this.$axios.post("/login/quitLogin").then(response => {
+                        this.service({
+                            url: "/login/quitLogin",
+                            method: "post"
+                        }).then(response => {
                             let data = response.data;
                             delCookie("token");
                             delCookie("refreshToken");
