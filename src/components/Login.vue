@@ -1,6 +1,6 @@
 <template>
   <div class="loginbg">
-    <div class="page">
+    <div class="page lm-shadow">
       <div class="head">渠道拓展平台</div>
       <div class="singin">SING IN</div>
       <div class="body">
@@ -8,7 +8,7 @@
           <li><label class="accountIcon"></label><input type="text" v-model="loginForm.account" class="txtAccount" placeholder="请输入登录账号" /></li>
           <li><label class="passwordIcon"></label><input type="password" v-model="loginForm.password" class="txtPwd" placeholder="请输入登录密码" /></li>
           <li style="border:0px;">
-            <img class="loginBtn" src="../assets/loginBtn.png" @click="loginAction" style="margin-left:-10px;"/>
+            <Button type="primary" class="loginBtn" @click="loginAction">登录</Button>
           </li>
         </ul>
       </div>
@@ -20,18 +20,23 @@
 .loginbg{
   width: 100%;
   height: 100vh;
-  background: url(../assets/login_bg.png) center center no-repeat;
+  /* background: url(../assets/login_bg.png) center center no-repeat; */
   /* background: #6699FF center center no-repeat; */
-  background-size: 100%;
+  background: linear-gradient(to bottom right,#65f7d7, #b2f3ee, #d0ece6, rgb(236, 100, 129))!important;
 }
 .page{
   background-color: #fff;
-  width: 503px;
+  width: 500px;
   height: 430px;
   border-radius: 5px;
-  right: 10%;
-  top: 20%;
+  left: 50%;
+  top: 50%;
+  margin-left: -250px;
+  margin-top: -215px;
   position:absolute;
+}
+.lm-shadow{
+  box-shadow:0px 2px 10px rgb(184, 185, 185);
 }
 .loginForm{
   width: 350px;
@@ -74,15 +79,6 @@
     font-size: 16px;
     outline: none;
 }
-.loginForm .txtCode{
-    width: 200px;
-    height: 48px;
-    font-size: 16px;
-    border: solid 1px #bad2d7;
-    border-radius: 3px;
-    float: left;
-    outline: none;
-}
 .loginForm .imgCode{
   width: 99px;
   height: 33px;
@@ -100,8 +96,14 @@
   background: url(../assets/password.png) no-repeat center center;
 }
 .loginForm .loginBtn{
-  padding: 0px;
-  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  font-size: 25px;
+  border:0px;
+  background: linear-gradient(to bottom right,#57a3f3, #76b0ee, #9dc9f8, rgb(190, 219, 236))!important;
+}
+.loginForm .loginBtn:hover{
+  background: linear-gradient(to bottom right,#2188f7, #4297f3, #60a6f0, rgb(118, 197, 247))!important;
 }
   .head{
     font-family: 'PingFang-SC-Heavy';

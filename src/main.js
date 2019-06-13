@@ -20,8 +20,10 @@ import {setCookie,getCookie,delCookie} from './js/cookieUtil.js'
 import ivueCommon from './js/ivueCommon'
 axios.defaults.withcredentials = true;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-axios.defaults.withcredentials = true;
 axios.defaults.timeout = 150000;
+if (process.env.NODE_ENV === 'production') {
+  axios.defaults.baseURL = 'http://47.103.17.3:8080'
+ }
 Vue.prototype.$axios = axios;
 Vue.prototype.$global = global;
 Vue.config.productionTip = false
